@@ -1,0 +1,91 @@
+// base styles
+@import "common/colors";
+
+// * {
+// box-sizing: border-box;
+//includes element's padding, margin, widths and height into total width & height calculations
+// }
+
+html,
+body {
+	// height: 100%;
+	width: 100vw;
+	box-sizing: border-box;
+}
+
+// .page-container {
+// position: relative;
+// min-height: 100vh;
+// }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Roboto", sans-serif;
+}
+
+// p {
+// 	font-family: "Open Sans", sans-serif;
+// }
+
+a {
+	font-family: "Montserrat", sans-serif;
+}
+
+// to override ion icon default block rule
+svg {
+	display: inline;
+}
+
+.logo {
+	max-height: 40px;
+}
+
+// .page-content {
+// 	padding-bottom: 8rem;
+// }
+
+.footer {
+	width: 100%;
+	position: absolute;
+	bottom: 0px;
+}
+
+.circle {
+	border: 2px solid $dakuleda-gold;
+	border-radius: 100%;
+	padding: 0.5vh 1.2vh;
+	display: inline;
+}
+
+.d-form-control {
+	padding: 7px 10px;
+	border-radius: 3px;
+	border: 1px solid black;
+	outline: none;
+	transition: border 0.2s ease-in-out;
+
+	&:focus {
+		border: 1px solid $dakuleda-gold;
+	}
+}
+
+.d-form-label {
+	padding: 1px;
+	font-size: 0.9rem;
+	display: block;
+	margin: 0px;
+}
+
+.table-hover {
+	tr {
+		cursor: pointer;
+	}
+}
+
+.selected-row-bg {
+	background-color: #f8d97b;
+}

@@ -1,0 +1,17 @@
+.ad {
+	border: 5px dashed $dakuleda-gold;
+}
+
+.ad-large {
+	max-width: 70vw;
+	max-height: 30vh;
+	margin: 5rem auto;
+	text-align: center;
+}
+
+@media screen and (max-width: 760px) {
+	.ad-large {
+		max-width: 90vw;
+		max-height: 24vh;
+	}
+}
