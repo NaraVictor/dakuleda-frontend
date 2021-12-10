@@ -5,6 +5,7 @@ import {
 	postData,
 	generateSlug,
 	fetchData,
+	uploadFile,
 } from "./../../../../../helpers/utilities";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -14,6 +15,18 @@ const NewProduct = (props) => {
 	const [busy, setBusy] = useState(false);
 	const [categories, setCategories] = useState([]);
 	const [manufacturers, setManufacturers] = useState([]);
+	const [image, setImage] = useState({
+		file: {},
+		url: "",
+	});
+	const imageUpload = (e) => {
+		if (e.target.value) {
+			setImage({
+				file: e.target.files,
+				url: URL.createObjectURL(e.target.files[0]),
+			});
+		}
+	};
 
 	const fetchCategories = () => {
 		fetchData("categories").then((res) => setCategories(res.data.data));
@@ -29,13 +42,31 @@ const NewProduct = (props) => {
 	}, []);
 
 	const submitData = (data) => {
+		if (image.url === "") {
+			alert("please upload a product image");
+			return;
+		}
+
 		setBusy(true);
+
 		postData("products", { ...data })
 			.then((res) => {
 				if (res.status === 200) {
-					reset();
-					alert("product added successfully");
+					uploadFile(
+						`products/${res.data.data.id}/upload-picture`,
+						image.file[0],
+						"productImage"
+					).then((res) => {
+						alert("product added successfully");
+						reset();
+						setImage({
+							file: {},
+							url: "",
+						});
+						return;
+					});
 				}
+				alert("something went wrong");
 			})
 			.catch((ex) => alert("an error occurred"))
 			.finally(() => setBusy(false));
@@ -242,9 +273,18 @@ const NewProduct = (props) => {
 					</div>
 
 					<div className="col-3">
-						<p>features</p>
-						<hr />
-						<p>gallery</p>
+						{image.url && (
+							<img
+								src={image.url}
+								alt="product pic"
+								style={{
+									maxHeight: "200px",
+									maxWidth: "190px",
+								}}
+							/>
+						)}
+						{/* <hr />
+						<p>gallery</p> */}
 					</div>
 				</div>
 				<input
@@ -253,6 +293,7 @@ const NewProduct = (props) => {
 					name="productImage"
 					id="productImage"
 					hidden
+					onChange={imageUpload}
 				/>
 				<input
 					type="file"

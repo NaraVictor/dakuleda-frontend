@@ -1,12 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { generateFileUrl } from "./../../helpers/utilities";
 
 const Category = (props) => {
-	const { image, name, slug } = props.category;
+	const { imageFileName, name, slug } = props.category;
 	return (
 		<Link to={`/c/${slug}`} category={name}>
 			<div className="category text-center">
-				<img src={image} alt="category" />
+				<img src={generateFileUrl(imageFileName)} alt="category" />
 			</div>
 			<div className="category-title text-center">{name}</div>
 		</Link>

@@ -1,9 +1,13 @@
-import { updateData } from "../../../../../helpers/utilities";
+import { deleteData } from "../../../../../helpers/utilities";
 import placeholder from "../../../../../static/img/placeholder-image.png";
+import { generateFileUrl } from "./../../../../../helpers/utilities";
 
 const ProductDetail = ({ product, onReload, onEdit }) => {
 	const deleteProduct = () => {
-		updateData(`accounts/${product.id}/update-status`).then((res) => onReload);
+		if (
+			window.confirm("are you sure of deleting this product ? can't be undone")
+		)
+			deleteData(`products/${product.id}`).then((res) => onReload());
 	};
 	return (
 		<div className="p-3">
@@ -59,7 +63,7 @@ const ProductDetail = ({ product, onReload, onEdit }) => {
 						</div>
 						<div className="col-5">
 							<img
-								src={product.imageUrl || placeholder}
+								src={generateFileUrl(product.imageFileName) || placeholder}
 								alt="category"
 								style={{
 									maxHeight: "200px",

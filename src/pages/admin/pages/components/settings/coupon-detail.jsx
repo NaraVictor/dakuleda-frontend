@@ -1,8 +1,8 @@
-import { updateData } from "../../../../../helpers/utilities";
+import { deleteData } from "./../../../../../helpers/utilities";
 
 const CouponDetail = ({ coupon, onReload, onEdit }) => {
-	const deletecoupon = () => {
-		updateData(`accounts/${coupon.id}/update-status`).then((res) => onReload);
+	const deleteCoupon = () => {
+		deleteData(`coupons/${coupon.id}`).then((res) => onReload());
 	};
 	return (
 		<div className="p-3">
@@ -44,9 +44,18 @@ const CouponDetail = ({ coupon, onReload, onEdit }) => {
 							edit
 						</button>
 
-						<button className="btn-dc-white" onClick={() => deletecoupon()}>
-							<i className="bi bi-trash"></i>
-							delete
+						<button className="btn-dc-white" onClick={() => deleteCoupon()}>
+							{!coupon.isDeleted ? (
+								<>
+									<i className="bi bi-x-circle-fill mr-1"></i>
+									stop
+								</>
+							) : (
+								<>
+									<i className="bi bi-play-fill mr-1"></i>
+									start
+								</>
+							)}
 						</button>
 					</div>
 				</div>

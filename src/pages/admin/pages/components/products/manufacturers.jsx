@@ -75,7 +75,14 @@ const ManufacturersComponent = (props) => {
 						{mode.edit ? (
 							<ManufacturerEdit obj={mode.data} onReload={fetchManufacturers} />
 						) : (
-							<ManufacturerDetail manufactuer={selected} onEdit={handleEdit} />
+							<ManufacturerDetail
+								manufactuer={selected}
+								onEdit={handleEdit}
+								onReload={() => {
+									fetchManufacturers();
+									setSelected({});
+								}}
+							/>
 						)}
 					</div>
 				</div>

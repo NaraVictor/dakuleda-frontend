@@ -1,16 +1,45 @@
-import { updateData } from "../../../../../helpers/utilities";
+import { updateData, uploadFile } from "../../../../../helpers/utilities";
 import { useState } from "react";
 import { Spinner2 } from "../../../../../components/spinner";
 import placeholder from "../../../../../static/img/placeholder-image.png";
+import { generateFileUrl } from "./../../../../../helpers/utilities";
 
 const CategoryEdit = ({ obj, onReload, onEdit }) => {
 	const [record, setRecord] = useState({
 		id: obj.id,
 		name: obj.name,
 		description: obj.description,
-		imageUrl: obj.imageUrl,
+		imageFileName: obj.imageFileName,
 	});
 	const [busy, setBusy] = useState(false);
+	const [image, setImage] = useState({
+		file: {},
+		url: "",
+	});
+
+	const imageUpload = (e) => {
+		if (e.target.value) {
+			setImage({
+				file: e.target.files,
+				url: URL.createObjectURL(e.target.files[0]),
+			});
+
+			uploadFile(
+				`categories/${record.id}/upload-picture`,
+				e.target.files[0],
+				"categoryImage"
+			).then((res) => {
+				if (res?.status === 200) {
+					alert("image successfully changed");
+					onReload(true);
+					return;
+				}
+			});
+
+			return;
+		}
+		alert("image update failed");
+	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -79,17 +108,40 @@ const CategoryEdit = ({ obj, onReload, onEdit }) => {
 								className="btn-dc-white"
 								onClick={() => document.getElementById("catImg").click()}>
 								<i className="bi bi-image mr-1"></i>
-								upload image
+								change image
 							</button>
-							<input type="file" name="catImg" id="catImg" hidden />
+							<input
+								type="file"
+								name="catImg"
+								id="catImg"
+								onChange={imageUpload}
+								hidden
+							/>
 						</div>
 
 						<div className="col-12">
-							<img
-								src={obj.imageUrl || placeholder}
-								alt="category"
-								height="200"
-							/>
+							{!image.url && (
+								<img
+									src={generateFileUrl(record.imageFileName) || placeholder}
+									alt="category"
+									id="categoryImage"
+									style={{
+										maxHeight: "200px",
+										maxWidth: "300px",
+									}}
+								/>
+							)}
+							{image.url && (
+								<img
+									src={image.url}
+									alt="category"
+									id="updatedImage"
+									style={{
+										maxHeight: "200px",
+										maxWidth: "300px",
+									}}
+								/>
+							)}
 						</div>
 					</div>
 				)}

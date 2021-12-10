@@ -1,6 +1,5 @@
 import { Route } from "react-router-dom";
 import { isAuthenticated } from "./auth";
-import AdminTemplate from "./../components/admin-template";
 import { Redirect } from "react-router-dom";
 import NavBar from "./../components/nav/navbar";
 import SubNav from "./../components/nav/subNav";

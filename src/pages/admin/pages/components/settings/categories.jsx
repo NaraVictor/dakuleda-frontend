@@ -68,7 +68,14 @@ const CategoriesComponent = (props) => {
 						{mode.edit ? (
 							<CategoryEdit obj={mode.data} onReload={fetchCategories} />
 						) : (
-							<CategoryDetail category={selected} onEdit={handleEdit} />
+							<CategoryDetail
+								category={selected}
+								onEdit={handleEdit}
+								onReload={() => {
+									fetchCategories();
+									setSelected({});
+								}}
+							/>
 						)}
 					</div>
 				</div>

@@ -5,7 +5,7 @@ const BuyItemButton = ({ prod, classes }) => {
 	const { buyItem } = useContext(shopContext);
 	return (
 		<button
-			className={`btn-dc-primary ${classes}`}
+			className={`btn-primary-filled ${classes}`}
 			onClick={() => {
 				window.location.href = "/checkout";
 				buyItem(prod);

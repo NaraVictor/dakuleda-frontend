@@ -1,7 +1,12 @@
-import { fetchData, updateData } from "../../../../../helpers/utilities";
+import {
+	fetchData,
+	updateData,
+	uploadFile,
+} from "../../../../../helpers/utilities";
 import { useState, useEffect } from "react";
 import { Spinner2 } from "../../../../../components/spinner";
 import placeholder from "../../../../../static/img/placeholder-image.png";
+import { generateFileUrl } from "./../../../../../helpers/utilities";
 
 const ProductEdit = ({ obj, onReload, onEdit }) => {
 	const [record, setRecord] = useState({
@@ -12,7 +17,9 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 		description: obj.description,
 		SKU: obj.SKU,
 		imageUrl: obj.imageUrl,
+		imageFileName: obj.imageFileName,
 		videoUrl: obj.videoUrl,
+		videoFileName: obj.videoFileName,
 		giftEligible: obj.giftEligible,
 		freeDelivery: obj.freeDelivery,
 		purchasePrice: obj.purchasePrice,
@@ -23,6 +30,34 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 	const [busy, setBusy] = useState(false);
 	const [cats, setCats] = useState([]);
 	const [mans, setMans] = useState([]);
+	const [image, setImage] = useState({
+		file: {},
+		url: "",
+	});
+
+	const imageUpload = (e) => {
+		if (e.target.value) {
+			setImage({
+				file: e.target.files,
+				url: URL.createObjectURL(e.target.files[0]),
+			});
+
+			uploadFile(
+				`products/${record.id}/upload-picture`,
+				e.target.files[0],
+				"productImage"
+			).then((res) => {
+				if (res?.status === 200) {
+					alert("image successfully changed");
+					onReload(true);
+					return;
+				}
+			});
+
+			return;
+		}
+		alert("image update failed");
+	};
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -243,17 +278,37 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 									<i className="bi bi-image mr-1"></i>
 									change image
 								</button>
-								<input type="file" name="imageUrl" id="imageUrl" hidden />
-								<img
-									src={record.imageUrl || placeholder}
-									alt="product"
-									style={{
-										maxHeight: "200px",
-										maxWidth: "190px",
-									}}
+								<input
+									type="file"
+									name="imageUrl"
+									onChange={imageUpload}
+									id="imageUrl"
+									hidden
 								/>
+
+								{!image.url && (
+									<img
+										src={generateFileUrl(record.imageFileName) || placeholder}
+										alt="product"
+										style={{
+											maxHeight: "200px",
+											maxWidth: "190px",
+										}}
+									/>
+								)}
+
+								{image.url && (
+									<img
+										src={image.url || placeholder}
+										alt="product"
+										style={{
+											maxHeight: "200px",
+											maxWidth: "190px",
+										}}
+									/>
+								)}
 							</div>
-							<div className="col-6 mb-3">
+							{/* <div className="col-6 mb-3">
 								<button
 									className="btn-dc-white mb-3"
 									onClick={() => document.getElementById("videoUrl").click()}>
@@ -269,7 +324,7 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 										maxWidth: "190px",
 									}}
 								/>
-							</div>
+							</div> */}
 						</div>
 					</div>
 				)}

@@ -1,11 +1,9 @@
-import { updateData } from "../../../../../helpers/utilities";
+import { deleteData } from "./../../../../../helpers/utilities";
 
 const ManufacturerDetail = ({ manufactuer, onReload, onEdit }) => {
 	const deleteManufacturer = () => {
-		updateData(`manufacturers/${manufactuer.id}/delete`).then(
-			(res) => onReload,
-			onEdit
-		);
+		if (window.confirm("are you sure?"))
+			deleteData(`manufacturers/${manufactuer.id}`).then((res) => onReload());
 	};
 	return (
 		<div className="p-3">

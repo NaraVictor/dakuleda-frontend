@@ -63,6 +63,7 @@ const AccountsComponent = (props) => {
 										className={`${user.id === selected.id && "bg-info"}`}>
 										<td>{user.fullName}</td>
 										<td>{user.username}</td>
+										{user.isDeleted && <td className="bg-danger px-1"></td>}
 									</tr>
 								))}
 							</tbody>
@@ -74,7 +75,11 @@ const AccountsComponent = (props) => {
 						{mode.edit ? (
 							<AccountEdit user={mode.data} onReload={fetchUsers} />
 						) : (
-							<AccountDetail user={selected} onEdit={handleEdit} />
+							<AccountDetail
+								user={selected}
+								onEdit={handleEdit}
+								onReload={fetchUsers}
+							/>
 						)}
 					</div>
 				</div>

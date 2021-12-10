@@ -66,9 +66,11 @@ const CouponsComponent = (props) => {
 										<td>{coupon.amount}</td>
 										<td
 											className={`${
-												coupon.isActive ? "bg-success" : "bg-danger"
+												coupon.isDeleted ? "bg-danger" : "bg-success"
 											} text-white`}>
-											<strong>{coupon.isActive ? "Active" : "Inactive"}</strong>
+											<strong>
+												{coupon.isDeleted ? "Inactive" : "Running"}
+											</strong>
 										</td>
 									</tr>
 								))}
@@ -81,7 +83,14 @@ const CouponsComponent = (props) => {
 						{mode.edit ? (
 							<CouponsEdit obj={mode.data} onReload={fetchCoupons} />
 						) : (
-							<CouponDetail coupon={selected} onEdit={handleEdit} />
+							<CouponDetail
+								coupon={selected}
+								onEdit={handleEdit}
+								onReload={() => {
+									fetchCoupons();
+									setSelected({});
+								}}
+							/>
 						)}
 					</div>
 				</div>

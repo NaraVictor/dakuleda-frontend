@@ -908,12 +908,6 @@ svg {
   max-height: 40px;
 }
 
-.footer {
-  width: 100%;
-  position: absolute;
-  bottom: 0px;
-}
-
 .circle {
   border: 2px solid #f2b705;
   border-radius: 100%;

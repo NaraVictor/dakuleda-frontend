@@ -3,16 +3,11 @@ import { Link } from "react-router-dom";
 import { shopContext } from "./../../context/shopContext";
 import AddToCartButton from "./addToCartButton";
 import BuyItemButton from "./buyItemButton";
+import { generateFileUrl } from "./../../helpers/utilities";
 
 const Product = (props) => {
-	const {
-		name,
-		regular_price,
-		product_image,
-		manufacturer_name,
-		new_price,
-		slug,
-	} = props.prod;
+	const { name, regularPrice, imageFileName, manufacturer, newPrice, slug } =
+		props.prod;
 	const { hideButtons, hideSeparator } = props;
 	const { selectItem } = useContext(shopContext);
 
@@ -23,15 +18,15 @@ const Product = (props) => {
 				title={name}
 				onClick={() => selectItem(props.prod)}>
 				<div className="product-image">
-					<img src={product_image} alt="product" />
+					<img src={generateFileUrl(imageFileName)} alt="product" />
 				</div>
 				<div className="product-detail">
 					<p className="m-0 product-title">{name}</p>
-					<small>{manufacturer_name ?? "manufacturer"}</small>
+					<small>{manufacturer.name ?? "manufacturer"}</small>
 					<div>
-						<strong>GHS {new_price}</strong>{" "}
+						<strong>GHS {newPrice}</strong>{" "}
 						<strike>
-							<small>GHS {regular_price}</small>
+							<small>GHS {regularPrice}</small>
 						</strike>
 					</div>
 
@@ -42,7 +37,7 @@ const Product = (props) => {
 				""
 			) : (
 				<div className="product-footer">
-					<AddToCartButton prod={props.prod} />
+					{/* <AddToCartButton prod={props.prod} /> */}
 					<BuyItemButton prod={props.prod} />
 				</div>
 			)}

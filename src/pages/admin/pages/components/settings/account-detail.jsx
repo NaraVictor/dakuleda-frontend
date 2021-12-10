@@ -1,9 +1,26 @@
-import { updateData } from "../../../../../helpers/utilities";
+import { deleteData } from "./../../../../../helpers/utilities";
+import { useState, useEffect } from "react";
 
 const AccountDetail = ({ user, onReload, onEdit }) => {
+	const [userObj, setUser] = useState({});
+
 	const updateStatus = () => {
-		updateData(`accounts/${user.id}/update-status`).then((res) => onReload);
+		deleteData(`accounts/${user.id}`).then((res) => {
+			onReload(true);
+			setUser({
+				...userObj,
+				isDeleted: !user.isDeleted,
+			});
+		});
+		alert("user status updated. ");
 	};
+
+	useEffect(() => {
+		setUser({
+			...user,
+		});
+	}, [user]);
+
 	return (
 		<div className="p-3">
 			{!user.hasOwnProperty("id") ? (
@@ -51,14 +68,14 @@ const AccountDetail = ({ user, onReload, onEdit }) => {
 								change password
 							</button>
 							<button className="btn-dc-white" onClick={() => updateStatus()}>
-								<i className="bi bi-trash"></i>
-								{user.isActive ? "de-activate" : "active"}
+								<i className="bi bi-mouse"></i>
+								{userObj.isDeleted ? "activate" : "de-activate"}
 							</button>
 							<div
 								className={`text-white col-12 py-1 mt-4 ${
-									user.isActive ? "bg-success" : "bg-danger"
+									userObj.isDeleted ? "bg-danger" : "bg-success"
 								}`}>
-								{user.isActive ? "Account active" : "Account de-activated"}
+								{userObj.isDeleted ? "Account de-activated" : "Account active"}
 							</div>
 						</div>
 					</div>

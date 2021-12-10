@@ -12,6 +12,7 @@ import {
 	CategoryPage,
 	ProductDetailPage,
 	NotFoundPage,
+	SecondDetailPage,
 } from "../pages";
 
 import {
@@ -27,36 +28,36 @@ const ShopRoutes = () => {
 		<div className="page-container">
 			<div className="page-content">
 				<Switch>
-					<CartContext>
-						<ShopContext>
-							<CustomRoute
-								path="/c/:category"
-								exact
-								component={<CategoryPage key={Math.random()} />}
-							/>
-							<CustomRoute
-								path="/p/:slug?"
-								exact
-								component={<ProductDetailPage key={Math.random()} />}
-							/>
-							<CustomRoute path="/cart" exact component={CartPage} />
-							<CustomRoute path="/checkout" exact component={CheckOut} />
+					{/* <CartContext> */}
+					{/* <ShopContext> */}
+					<CustomRoute
+						path="/c/:category"
+						exact
+						component={() => <CategoryPage key={Math.random()} />}
+					/>
+					<Route
+						path="/p/:slug"
+						exact
+						component={() => <ProductDetailPage key={Math.random()} />}
+					/>
+					<CustomRoute path="/cart" exact component={CartPage} />
+					<CustomRoute path="/checkout" exact component={CheckOut} />
 
-							{/* admin */}
-							<Route path="/admin" component={AdminRoutes} />
-							<CustomRoute path="/" exact component={HomePage} />
+					{/* admin */}
+					<Route path="/admin" component={AdminRoutes} />
+					<CustomRoute path="/" exact component={HomePage} />
 
-							{/* settings */}
-							<Route path="/login" component={LoginPage} />
-							<Route path="/change-password" component={ChangePassword} />
-							<Route path="/forgot-password" component={ForgotPassword} />
-							<Route path="/user-signup" component={SignUpPage} />
+					{/* settings */}
+					<Route path="/login" component={LoginPage} />
+					<Route path="/change-password" component={ChangePassword} />
+					<Route path="/forgot-password" component={ForgotPassword} />
+					<Route path="/user-signup" component={SignUpPage} />
 
-							{/* redirect to 404 page */}
-							{/* <Route path="/not-found" component={NotFoundPage} />
+					{/* redirect to 404 page */}
+					{/* <Route path="/not-found" component={NotFoundPage} />
 							<Redirect to="/not-found" /> */}
-						</ShopContext>
-					</CartContext>
+					{/* </ShopContext> */}
+					{/* </CartContext> */}
 				</Switch>
 			</div>
 		</div>

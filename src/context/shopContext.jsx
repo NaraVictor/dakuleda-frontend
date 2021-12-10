@@ -1,48 +1,45 @@
-import React, { createContext } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { fetchData } from "../helpers/utilities";
 
 export const shopContext = createContext();
 
-class ShopContext extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			products: [],
-			selectedItem: {},
-			buy: false,
-		};
-	}
+const ShopContext = (props) => {
+	const [state, setState] = useState({
+		products: [],
+		selectedItem: {},
+		buy: false,
+	});
 
-	componentDidMount() {
-		this.fetchProducts().then((res) => {
-			this.setState({ products: res.data?.data });
+	useEffect(() => {
+		fetchProducts().then((res) => {
+			setState({ ...state, products: res.data?.data });
 		});
-	}
+	}, []);
 
-	findProduct = (slug) => {
+	const findProduct = (slug) => {
 		// query all products n return a matching slug
-		const q = this.state.products.filter((prod) => {
+		const q = state.products.filter((prod) => {
 			return prod.slug === slug;
 		});
 
 		return q;
 	};
 
-	fetchProducts = async () => {
-		const p = await fetchData("products/");
+	const fetchProducts = async () => {
+		const p = await fetchData("products");
 		return p;
 	};
 
-	handleFetchProducts = () => {
-		return this.state.products;
+	const handleFetchProducts = () => {
+		return state.products;
 	};
 
-	handleCheckout = (type) => {
+	const handleCheckout = (type) => {
 		// types are cart, buy
 
 		//
 		if (type === "buy") {
-			this.setState({ buy: false });
+			setState({ buy: false });
 			localStorage.removeItem("buy");
 			return;
 		}
@@ -50,40 +47,40 @@ class ShopContext extends React.Component {
 		return true;
 	};
 
-	handleGetBuyItem = () => {
+	const handleGetBuyItem = () => {
 		if (localStorage.getItem("buy") === null) return null;
 		return JSON.parse(localStorage.getItem("buy"));
 	};
 
 	// buy an item
-	handleBuyItem = (item) => {
+	const handleBuyItem = (item) => {
 		if (localStorage.getItem("buy") !== null) {
 			localStorage.removeItem("buy");
 		}
 
-		this.setState({ buy: true });
+		setState({ buy: true });
 		localStorage.setItem("buy", JSON.stringify(item));
 	};
 
 	// select an item
-	handleSelectItem = (item) => {
-		this.setState({ selectedItem: { ...item } });
+	const handleSelectItem = (item) => {
+		setState({ ...state, selectedItem: { ...item } });
 	};
 
-	handleSelectedItem = async (slug) => {
-		const { selectedItem } = this.state;
+	const handleGetSelectedItem = async (slug) => {
+		const { selectedItem } = state;
 		// fetch item from state if it exists
 		if (selectedItem.hasOwnProperty("id")) return { ...selectedItem };
 
-		// fetch product from server if it doesn't
+		// fetch product from server if it doesn't exist
 		let sp;
 
-		await fetchData(`products/?slug=${slug}`)
+		await fetchData(`products/${slug}`)
 			.then((p) => {
-				sp = p.data;
+				sp = p.data.data;
 			})
 			.catch((err) => {
-				sp = this.fetchProducts().then((res) => ({
+				sp = fetchProducts().then((res) => ({
 					...res.data?.data,
 					notfound: true,
 				}));
@@ -91,21 +88,19 @@ class ShopContext extends React.Component {
 		return sp;
 	};
 
-	render() {
-		return (
-			<shopContext.Provider
-				value={{
-					fetchProducts: this.handleFetchProducts,
-					getSelectedItem: this.handleSelectedItem,
-					selectItem: this.handleSelectItem,
-					buyItem: this.handleBuyItem,
-					getBuyItem: this.handleGetBuyItem,
-					checkOut: this.handleCheckout,
-				}}>
-				{this.props.children}
-			</shopContext.Provider>
-		);
-	}
-}
+	return (
+		<shopContext.Provider
+			value={{
+				fetchProducts: handleFetchProducts,
+				getSelectedItem: handleGetSelectedItem,
+				selectItem: handleSelectItem,
+				buyItem: handleBuyItem,
+				getBuyItem: handleGetBuyItem,
+				checkOut: handleCheckout,
+			}}>
+			{props.children}
+		</shopContext.Provider>
+	);
+};
 
 export default ShopContext;

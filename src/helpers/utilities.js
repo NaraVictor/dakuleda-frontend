@@ -39,7 +39,7 @@ export const fetchData = async (url = "", auth = false, config) => {
 	}
 };
 
-export const postData = async (url = "", data = {}, auth = true, config) => {
+export const postData = async (url = "", data = {}, config, auth = true) => {
 	try {
 		if (auth) {
 			axios.defaults.headers.common["authorization"] = getToken();
@@ -51,7 +51,7 @@ export const postData = async (url = "", data = {}, auth = true, config) => {
 	}
 };
 
-export const updateData = async (url = "", data = {}, auth = true, config) => {
+export const updateData = async (url = "", data = {}, config, auth = true) => {
 	try {
 		if (auth) {
 			axios.defaults.headers.common["authorization"] = getToken();
@@ -63,7 +63,7 @@ export const updateData = async (url = "", data = {}, auth = true, config) => {
 	}
 };
 
-export const deleteData = async (url = "", auth = true, config) => {
+export const deleteData = async (url = "", config, auth = true) => {
 	try {
 		if (auth) {
 			axios.defaults.headers.common["authorization"] = getToken();
@@ -118,4 +118,31 @@ export const generateSlug = (text) => {
 	let slug = text.toLowerCase();
 	slug = slug.replace(/\s+/g, "-");
 	return slug;
+};
+
+export const generateFileUrl = (fileName, isImage = true) => {
+	if (!fileName) return null;
+
+	let url = "";
+	if (isImage) {
+		url = appUrl.replace("/api", "") + "/uploads/images";
+	} else {
+		url = appUrl.replace("/api", "") + "/uploads/videos";
+	}
+	return `${url}/${fileName}`;
+};
+
+export const uploadFile = async (url, file, fileName) => {
+	const formData = new FormData();
+	formData.append(fileName, file);
+	// const imagefile = document.getElementById("productImage");
+	// formData.append("image", imagefile.files[0]);
+
+	try {
+		const res = await postData(url, formData);
+		if (res.status === 200) return res;
+		throw new Error("file upload failed");
+	} catch (ex) {
+		console.log("error ");
+	}
 };

@@ -55,10 +55,6 @@ const SettingPages = (props) => {
 				</a> */}
 			</div>
 
-			<div className="badge badge-danger mt-3">
-				<h5>product, category, sliders images are required</h5>
-			</div>
-
 			{page === 0 && <AccountsComponent />}
 			{/* {page === 1 && <CompanyComponent />} */}
 			{page === 2 && <CategoriesComponent />}

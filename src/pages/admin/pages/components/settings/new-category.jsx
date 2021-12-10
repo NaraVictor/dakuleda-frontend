@@ -1,48 +1,50 @@
 import { useForm } from "react-hook-form";
-import { postData } from "./../../../../../helpers/utilities";
+import { postData, uploadFile } from "./../../../../../helpers/utilities";
 import { useState } from "react";
 const NewCategory = (props) => {
 	const { register, handleSubmit, reset } = useForm();
 	const [busy, setBusy] = useState(false);
+	const [image, setImage] = useState({
+		file: {},
+		url: "",
+	});
+
+	const imageUpload = (e) => {
+		if (e.target.value) {
+			setImage({
+				file: e.target.files,
+				url: URL.createObjectURL(e.target.files[0]),
+			});
+		}
+	};
 
 	const submitData = (data) => {
+		if (image.url === "") {
+			alert("please upload a category picture");
+			return;
+		}
+
 		setBusy(true);
 		postData("categories", { ...data })
 			.then((res) => {
 				if (res.status === 200) {
-					reset();
-					alert("category created successfully");
+					uploadFile(
+						`categories/${res.data.data.id}/upload-picture`,
+						image.file[0],
+						"categoryImage"
+					).then((res) => {
+						reset();
+						setImage({
+							file: {},
+							url: "",
+						});
+						alert("category created successfully");
+					});
 				}
 			})
 			.catch((ex) => alert("an error occurred"))
 			.finally(() => setBusy(false));
 	};
-
-	// const imageUpload = (e) => {
-	// 	if (e.target.value) {
-	// 		setRecord({
-	// 			fields: { ...record.fields },
-	// 			image: {
-	// 				file: e.target.files,
-	// 				url: URL.createObjectURL(e.target.files[0]),
-	// 			},
-	// 		});
-	// 	}
-	// };
-
-	// const submitImage = (beneficiaryId) => {
-	// 	const fd = new FormData();
-	// 	fd.append("photoId", record.image.file[0]);
-
-	// 	axios
-	// 		.post(`${constants.baseURL}/beneficiary/photo-id/${beneficiaryId}`, fd)
-	// 		.then((res) => {
-	// 			clearForm();
-	// 			onsubmit(); //prop
-	// 			setShowAlert(true); //alert
-	// 		})
-	// 		.catch((ex) => console.log("error ", ex));
-	// };
 
 	return (
 		<div>
@@ -80,8 +82,8 @@ const NewCategory = (props) => {
 
 			<form id="form" onSubmit={handleSubmit(submitData)}>
 				<div className="row">
-					<div className="col-12">
-						<div className="col-9">
+					<div className="col-7">
+						<div className="col-12">
 							{/* <p>
 								<strong>Slug:</strong> category-name
 							</p> */}
@@ -96,7 +98,7 @@ const NewCategory = (props) => {
 								{...register("name", { required: true })}
 							/>
 						</div>
-						<div className="col-9 my-3">
+						<div className="col-12 my-3">
 							<label htmlFor="description" className="d-form-label">
 								Description
 							</label>
@@ -108,11 +110,24 @@ const NewCategory = (props) => {
 							/>
 						</div>
 					</div>
+					<div className="col-5">
+						{image.url && (
+							<img
+								src={image.url}
+								alt="category img"
+								style={{
+									maxHeight: "350px",
+									maxWidth: "350px",
+								}}
+							/>
+						)}
+					</div>
 				</div>
 				<input
 					type="file"
 					name="categoryImage"
 					id="categoryImage"
+					onChange={(e) => imageUpload(e)}
 					hidden
 					accept=".jpg, .png, .gif, .jpeg"
 				/>

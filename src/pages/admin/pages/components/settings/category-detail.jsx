@@ -1,9 +1,12 @@
-import { updateData } from "../../../../../helpers/utilities";
+import { deleteData } from "../../../../../helpers/utilities";
 import placeholder from "../../../../../static/img/placeholder-image.png";
+import { generateFileUrl } from "./../../../../../helpers/utilities";
 
-const CategoryDetail = ({ category, onDone, onEdit }) => {
+const CategoryDetail = ({ category, onReload, onEdit }) => {
 	const deleteCategory = () => {
-		updateData(`accounts/${category.id}/update-status`).then((res) => onDone);
+		if (window.confirm("Are you sure ?")) {
+			deleteData(`categories/${category.id}`).then((res) => onReload());
+		}
 	};
 	return (
 		<div className="p-3">
@@ -18,7 +21,7 @@ const CategoryDetail = ({ category, onDone, onEdit }) => {
 					</div>
 					<hr />
 					<div className="row">
-						<div className="col-7">
+						<div className="col-6">
 							<p>
 								<strong>Slug:</strong> {category.slug}
 							</p>
@@ -26,27 +29,32 @@ const CategoryDetail = ({ category, onDone, onEdit }) => {
 								<strong>Description:</strong> {category.description}
 							</p>
 						</div>
-						<div className="col-5">
+						<div className="col-6">
 							<img
-								src={category.imageUrl || placeholder}
+								src={generateFileUrl(category.imageFileName) || placeholder}
 								alt="category"
-								height="200"
+								style={{
+									maxHeight: "200px",
+									maxWidth: "300px",
+								}}
 							/>
 						</div>
 					</div>
 					<hr />
 					<div className="row">
-						<button
-							className="btn-dc-white"
-							onClick={() => onEdit(category, true)}>
-							<i className="bi bi-pencil"></i>
-							edit
-						</button>
+						<div className="col-12">
+							<button
+								className="btn-dc-white"
+								onClick={() => onEdit(category, true)}>
+								<i className="bi bi-pencil"></i>
+								edit
+							</button>
 
-						<button className="btn-dc-white" onClick={() => deleteCategory()}>
-							<i className="bi bi-trash"></i>
-							delete
-						</button>
+							<button className="btn-dc-white" onClick={() => deleteCategory()}>
+								<i className="bi bi-trash"></i>
+								delete
+							</button>
+						</div>
 					</div>
 				</div>
 			)}
