@@ -7,8 +7,8 @@ const BuyItemButton = ({ prod, classes }) => {
 		<button
 			className={`btn-primary-filled ${classes}`}
 			onClick={() => {
-				window.location.href = "/checkout";
 				buyItem(prod);
+				window.location.href = "/checkout";
 			}}>
 			Buy now
 		</button>

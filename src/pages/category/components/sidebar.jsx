@@ -1,18 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
+import { toTitleCase } from "./../../../helpers/utilities";
 
 const CategorySideBar = (props) => {
 	const { categories } = props;
 
 	return (
-		<ul className="sticky-top">
+		<ul className="categories-menu-list">
 			{categories.map((cat) => (
-				<Link
+				<NavLink
 					to={`/c/${cat.slug}`}
 					category={cat.name}
+					activeClassName="dc-gold h5"
 					className="main-category pl-2">
-					{cat.name}
-				</Link>
+					{toTitleCase(cat.name)}
+				</NavLink>
 			))}
 		</ul>
 	);

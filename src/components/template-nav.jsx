@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import { getRole } from "../helpers/auth";
 const AdminTemplateNav = (props) => {
 	return (
 		<nav className="nav lower-nav">
@@ -26,14 +27,16 @@ const AdminTemplateNav = (props) => {
 				<i className="bi bi-box pr-2"></i>
 				Products
 			</NavLink>
-			<NavLink
-				exact
-				to="/admin/settings"
-				activeClassName="active-link"
-				className="nav-link">
-				<i className="bi bi-gear pr-2"></i>
-				Settings
-			</NavLink>
+			{getRole() !== "staff" && (
+				<NavLink
+					exact
+					to="/admin/settings"
+					activeClassName="active-link"
+					className="nav-link">
+					<i className="bi bi-gear pr-2"></i>
+					Settings
+				</NavLink>
+			)}
 		</nav>
 	);
 };

@@ -52,12 +52,12 @@
 
 .category {
 	position: relative;
-	height: 13rem;
+	height: 9rem;
 
 	& img {
 		border-radius: 100%;
-		max-width: 200px;
-		max-height: 200px;
+		max-width: 150px;
+		max-height: 150px;
 	}
 
 	& .category-title {
@@ -74,7 +74,7 @@
 
 	.categories-menu {
 		display: inline-block;
-		color: $dakuleda-gold;
+		// color: $dakuleda-gold;
 	}
 
 	.view-options small {

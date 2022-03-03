@@ -1,17 +1,27 @@
-.ad {
-	border: 5px dashed $dakuleda-gold;
+.ad img {
+	// border: 5px dashed $dakuleda-gold;
+	max-height: 35vh;
 }
 
-.ad-large {
-	max-width: 70vw;
-	max-height: 30vh;
-	margin: 5rem auto;
+.ad-big img {
+	max-width: 60vw;
+	text-align: center;
+}
+
+.ad-small img {
+	max-width: 30vw;
 	text-align: center;
 }
 
 @media screen and (max-width: 760px) {
-	.ad-large {
+	.ad-big img,
+	.ad-small img {
+		margin-top: 10px;
 		max-width: 90vw;
-		max-height: 24vh;
+	}
+
+	.ad img {
+		text-align: center;
+		max-height: 30vh;
 	}
 }

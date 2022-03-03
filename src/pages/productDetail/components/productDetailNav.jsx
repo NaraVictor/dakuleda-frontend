@@ -6,8 +6,8 @@ const ProductDetailNav = (props) => {
 			{/* <hr className="m-0" /> */}
 			<ul className="nav container py-2">
 				<li className="nav-item">
-					<a className="nav-link text-dark" href="#specifications">
-						Specifications
+					<a className="nav-link text-dark" href="#features">
+						<h4 className="m-0">Features</h4>
 					</a>
 				</li>
 				{/* <li className="nav-item">

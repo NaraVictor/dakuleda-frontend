@@ -4,5 +4,5 @@ export const constants = {
 
 export const urls = {
 	devApi: "http://localhost:2021/api",
-	prodApi: "https://gardi.thecolonyfdn.org/api",
+	prodApi: "https://api.dakuleda.com/api",
 };

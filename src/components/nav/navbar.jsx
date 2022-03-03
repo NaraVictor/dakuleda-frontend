@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../../static/img/logo/logo.png";
+import logo from "../../static/img/logo/logo-new.jpg";
 import CartIcon from "./../shop/cart";
 import SearchBox from "./search";
 
@@ -14,14 +14,13 @@ const NavBar = (props) => {
 
 			<SearchBox />
 
-			<div className="pr-md-5 pr-sm-0 cart-wrapper">
-				<Link to="/" className="px-4">
+			<div className="pr-md-5 pr-sm-0 cart-wrapper d-none d-md-block">
+				<Link to="/about" className="px-4">
 					Help
 				</Link>
-				<Link to="/cart">
-					{/* Cart */}
+				{/* <Link to="/cart">
 					<CartIcon />
-				</Link>
+				</Link> */}
 			</div>
 		</nav>
 	);

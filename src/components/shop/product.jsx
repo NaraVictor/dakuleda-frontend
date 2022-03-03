@@ -3,16 +3,41 @@ import { Link } from "react-router-dom";
 import { shopContext } from "./../../context/shopContext";
 import AddToCartButton from "./addToCartButton";
 import BuyItemButton from "./buyItemButton";
-import { generateFileUrl } from "./../../helpers/utilities";
+import {
+	cedisLocale,
+	generateFileUrl,
+	priceChangePercentage,
+} from "./../../helpers/utilities";
+import { GiftEligible, FreeDelivery } from "../gift-deliver";
 
 const Product = (props) => {
-	const { name, regularPrice, imageFileName, manufacturer, newPrice, slug } =
-		props.prod;
+	const {
+		name,
+		regularPrice,
+		imageFileName,
+		newPrice,
+		slug,
+		giftEligible,
+		freeDelivery,
+	} = props.prod;
 	const { hideButtons, hideSeparator } = props;
 	const { selectItem } = useContext(shopContext);
 
 	return (
 		<article className="product text-center my-md-4">
+			<div className="add-ons">
+				{giftEligible && (
+					<p className="m-0">
+						<GiftEligible showIconsOnly={true} />
+					</p>
+				)}
+				{freeDelivery && <FreeDelivery showIconsOnly={true} />}
+			</div>
+			{priceChangePercentage(regularPrice, newPrice) > 0 && (
+				<p className="change-percent">
+					{priceChangePercentage(regularPrice, newPrice) + " % off"}
+				</p>
+			)}
 			<Link
 				to={`/p/${slug}`}
 				title={name}
@@ -22,15 +47,15 @@ const Product = (props) => {
 				</div>
 				<div className="product-detail">
 					<p className="m-0 product-title">{name}</p>
-					<small>{manufacturer.name ?? "manufacturer"}</small>
+					{/* <small>{manufacturer.name ?? "manufacturer"}</small> */}
 					<div>
-						<strong>GHS {newPrice}</strong>{" "}
+						<strong>GHS {cedisLocale.format(newPrice)}</strong>{" "}
 						<strike>
 							<small>GHS {regularPrice}</small>
 						</strike>
 					</div>
 
-					{hideSeparator ? "" : <hr />}
+					{/* {hideSeparator ? "" : <hr />} */}
 				</div>
 			</Link>
 			{hideButtons ? (

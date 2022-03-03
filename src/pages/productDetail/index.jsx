@@ -3,86 +3,114 @@ import React, { useState, useEffect, useContext } from "react";
 // components
 import SimilarProducts from "./components/similarProducts";
 import SingleProduct from "./components/singleProduct";
-import Specifications from "./components/specifications";
 import ProductDetailNav from "./components/productDetailNav";
 // import Reviews from "./components/reviews";
 // import BrowsingHistory from "./components/browsingHistory";
 import ScrollToTopOnMount from "../../components/scrollToTop";
+import ScrollToTop from "react-scroll-to-top";
 
 //
 import { shopContext } from "../../context/shopContext";
 import LargeAd from "../../components/ads/largeAd";
-import { fetchData } from "../../helpers/utilities";
+import { fetchData, postData } from "../../helpers/utilities";
 import PageTitle from "../../components/page-title";
-import { useHistory } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
+import Features from "./components/features";
+import axios from "axios";
+import Ad from "../../components/ads/ad";
+import MetaTag from "../../components/meta-tags";
+import { generateFileUrl } from "./../../helpers/utilities";
 
 const ProductDetailPage = (props) => {
-	// const [state, setState] = useState({
-	// 	prod: [],
-	// 	specifications: [],
-	// 	gallery: [],
-	// 	similar: [],
-	// });
-
-	const [prod, setProduct] = useState({});
-
 	const ctx = useContext(shopContext);
-	const history = useHistory();
+	const [prod, setProduct] = useState({});
+	const [features, setFeatures] = useState([]);
+	const [similarProds, setSimilarProds] = useState([]);
+	const [gallery, setGallery] = useState([]);
+
+	const route = useRouteMatch();
+	const { slug } = route.params;
+
+	const fetchFeatures = (id) => {
+		return fetchData(`products/${id}/features`).then((res) => res.data?.data);
+	};
+	const fetchGallery = (id) => {
+		return fetchData(`products/${id}/gallery`).then((res) => res.data?.data);
+	};
+
+	const fetchSimilarProducts = (slug) => {
+		fetchData(`categories/${slug}/similar-products`)
+			.then((res) => {
+				if (res.status === 200) {
+					setSimilarProds(res.data.data);
+				}
+			})
+			.catch((err) => console.log(err));
+	};
+
+	const recordVisitor = async () => {
+		const rs = await axios.get("https://ipapi.co/json/");
+		const visitor = {
+			product: prod["name"],
+			country: rs.data.country_name,
+			city: rs.data.city,
+			url: window.location.href,
+		};
+
+		postData("analytics?type=product", visitor);
+	};
 
 	useEffect(() => {
-		fetchData(`products/${slug}`).then((res) => {
-			setProduct(...res.data.data);
+		ctx.getSelectedItem(slug).then((res) => {
+			setProduct({ ...res });
+			// calls for similar products, features, n gallery
+			fetchSimilarProducts(res.category.slug);
+			if (res.features === undefined) {
+				fetchFeatures(res.id).then((r) => {
+					r?.length > 0 && setFeatures(r);
+				});
+				// return;
+			} else {
+				setFeatures(res.features);
+			}
+
+			if (res.gallery === undefined) {
+				fetchGallery(res.id).then((r) => {
+					r?.length > 0 && setGallery(r);
+				});
+				return;
+			}
+
+			setGallery(res.gallery);
 		});
-		// ctx.getSelectedItem(slug).then((prod) => {
-		// 	console.log("item slug is ", slug);
-		// 	setState({
-		// 		...state,
-		// 		prod,
-		// 	});
+		recordVisitor();
+	}, [slug]);
 
-		// calls for similar products, specifications, n gallery
-		// fetchSpecifications(prod.id);
-		// fetchGallery(prod.id);
-		// fetchSimilarProducts(prod.category);
-		// fetchReviews();
-		// });
-	}, []);
-
-	// const fetchSimilarProducts = (category) => {
-	// 	fetchData(`categories/${category}/similar`)
-	// 		.then((prods) =>
-	// 			// setState({...state, similar: prods.data["similar products"] })
-	// 		)
-	// 		.catch((err) => console.log(err));
-	// };
-
-	// const fetchSpecifications = (id) => {
-	// 	fetchData(`products/${id}/features`).then((specs) =>
-	// 		// setState({ specifications: [...specs.data.data] })
-	// 	);
-	// };
-
-	// const fetchGallery = (id) => {
-	// 	fetchData(`products/${id}/gallery`).then((pics) =>
-	// 		// setState({ gallery: pics.data.data })
-	// 	);
-	// };
-
-	// const { prod, similar, gallery } = state;
 	return (
 		<>
-			<PageTitle title="Product" />
-			{/* <h2>Product Page</h2> */}
 			<ScrollToTopOnMount />
-			<SingleProduct prod={prod} />
-			{/* <SimilarProducts prods={similar} /> */}
+			<ScrollToTop smooth />
+
+			<MetaTag
+				pageTitle={prod.name}
+				description={prod.description}
+				link={window.location.href}
+				title={prod.name}
+				id={prod.id}
+				image={generateFileUrl(prod.imageFileName)}
+			/>
+
+			<SingleProduct prod={prod} gallery={gallery} />
 			<ProductDetailNav />
-			{/* <div style={{ backgroundColor: "#eee" }} className="py-2">
-				<Specifications features={state.specifications} />
-				<Reviews />
-				<BrowsingHistory />
-			</div> */}
-			{/* <LargeAd /> */}
+			<div className="py-2">
+				<Features features={features} />
+				{/* <Reviews />
+				<BrowsingHistory /> */}
+			</div>
+			<div className="container">
+				<Ad />
+			</div>
+			{similarProds?.length > 0 && <SimilarProducts prods={similarProds} />}
 		</>
 	);
 };

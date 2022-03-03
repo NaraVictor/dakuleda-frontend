@@ -17,9 +17,9 @@ const SimilarProducts = (props) => {
 			<hr />
 			{/* <article className="row"> */}
 			<SlimSlider slideNo={sn} duration={3000}>
-				{prods.map((item) => (
+				{prods?.map((item) => (
 					<SplideSlide key={item.id}>
-						<Product hideButtons={true} hideSeparator={true} prod={item} />
+						<Product prod={item} />
 					</SplideSlide>
 				))}
 			</SlimSlider>

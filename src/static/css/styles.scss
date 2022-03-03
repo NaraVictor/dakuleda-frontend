@@ -1,5 +1,5 @@
 @import "partials/common/buttons";
-// @import "partials/common/colors";
+@import "partials/common/colors";
 
 // components
 @import "partials/components/navs";
@@ -12,6 +12,7 @@
 @import "partials/views/categories";
 @import "partials/views/home";
 @import "partials/views/cart";
+@import "partials/views/checkout";
 @import "partials/views/single-product";
 
 // base

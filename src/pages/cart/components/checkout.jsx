@@ -1,129 +1,175 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { shopContext } from "./../../../context/shopContext";
 import CheckOutForm from "./checkoutForm";
 import { BuyCheckOut, CartCheckOut } from "./checkoutItems";
 import { Link } from "react-router-dom";
-import { postData, toTitleCase } from "./../../../helpers/utilities";
+import { fetchData, postData } from "./../../../helpers/utilities";
+import checkIcon from "../../../static/img/check.png";
+import _ from "lodash";
 
-class CheckOut extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			form: {
-				name: "",
-				location: "",
-				phone: "",
-				email: "",
-				"payment-method": "",
-				"delivery-method": "",
-			},
-			success: false,
-			errors: [],
-		};
-	}
+const CheckOut = (props) => {
+	const [success, setSuccess] = useState(false);
+	const [busy, setBusy] = useState(false);
+	const [isCash, setIsCash] = useState(true);
+	const [card, setCard] = useState({});
 
-	static contextType = shopContext;
+	const ctx = useContext(shopContext);
+	const item = ctx.getBuyItem();
 
-	componentDidMount() {
+	sessionStorage.setItem("charity", "charity-alert-ad-open"); //prevents charity pop-up
+
+	useEffect(() => {
 		// check if either cart or buy mode is valid
-		// if(localStorage.getItem("buy"))
-	}
+		// if(!localStorage.getItem("buy"))
 
-	validateForm = () => {
-		let { errors, form } = this.state;
-		errors = [];
+		if (!item) {
+			alert(
+				"Oopsie, no item(s) found for check-out.\n Buy a product to check-out"
+			);
+			props.history.replace("/");
+		}
+	}, []);
 
-		for (const [key, value] of Object.entries(form)) {
-			if (!value) {
-				if (["email"].includes(key)) continue;
-				else errors.push(`${toTitleCase(key)} is required`);
-			}
+	const handleRedeemCode = (code) => {
+		if (code) {
+			fetchData(`cards/codes/${_.trim(code)}`).then((res) => {
+				if (res.status === 200) {
+					_.isEmpty(res.data?.data)
+						? setCard({ isEmpty: true })
+						: res.data.data.isUsed
+						? setCard({ isUsed: true })
+						: setCard(res.data.data);
+					return;
+				}
+			});
 		}
 
-		this.setState({ errors });
-		if (errors.length > 0) return false;
-		return true;
+		setCard({});
 	};
 
-	handleCheckOut = (e) => {
-		e.preventDefault();
+	const handleCheckOut = (data) => {
+		if (!item) {
+			alert("no purchase item(s) found");
+			return;
+		}
 
-		if (!this.validateForm()) return;
+		setBusy(true);
+		const orderLine = {
+			id: item.id,
+			price: item.newPrice,
+			quantity: item.quantity || 1,
+		};
 
-		postData("checkout/").then((res) => {
-			// update success n clear form
-			this.setState({
-				success: true,
-				form: {
-					name: "",
-					location: "",
-					phone: "",
-					email: "",
-					"payment-method": "",
-					"delivery-method": "",
-				},
-			});
+		postData("orders", {
+			...data,
+			orderTotal: item.newPrice,
+			deliveryCost: item.deliveryCost,
+			deliveryPeriod: item.deliveryPeriod,
+			paymentMode: isCash ? "cash" : "credit",
+			orderLine: [orderLine],
+			cardCode: card?.code || "",
+		})
+			.then((res) => {
+				if (res.status === 200) {
+					setSuccess(true);
+					ctx.checkOut("buy"); //clear buy item
+				}
+			})
+			.finally(() => setBusy(false));
 
-			// call checkout on context
-			this.context.checkOut("buy");
-		});
+		// postData("checkout/").then((res) => {
+		// 	// update success n clear form
+		// 	// call checkout on context
+		// 	ctx.checkOut("buy");
+		// });
 	};
 
-	handleChange = ({ target: input }) => {
-		const form = { ...this.state.form };
-		form[input.id] = input.value;
-		this.setState({ form });
-	};
+	return (
+		<div className="container mt-3 mb-5">
+			<article className="row">
+				{success ? (
+					<div className="text-center col">
+						<img
+							src={checkIcon}
+							alt="check mark icon"
+							className="my-5"
+							style={{
+								maxheight: "150px",
+								maxWidth: "150px",
+							}}
+						/>
+						<h2 className="text-success">
+							<strong>Success</strong>
+						</h2>
+						<p>Your order has been successfully placed.</p>
+						<p>We'd get in touched soon!</p>
+						<button
+							className="btn-primary-filled p-2"
+							onClick={() => {
+								props.history.replace("/");
+							}}>
+							Continue shopping
+						</button>
+					</div>
+				) : (
+					<>
+						<section className="col-md-6 col order-2 order-md-1">
+							<h3>{busy ? "Checking out..." : "Check-out"}</h3>
+							<hr />
+							<h5>How do you want to pay?</h5>
+							<div className="row">
+								<div className="col">
+									<button
+										disabled={busy}
+										onClick={() => setIsCash(true)}
+										className={`w-100 payment-choice ${
+											isCash && "selected-choice"
+										}`}>
+										<span>
+											<i className="bi bi-cash mr-2"></i>
+											Cash
+										</span>
+									</button>
+								</div>
+								<div className="col">
+									<button
+										disabled={busy}
+										onClick={() => {
+											setIsCash(false);
+											setCard({});
+										}}
+										className={`w-100 payment-choice ${
+											!isCash && "selected-choice"
+										}`}>
+										<span>
+											<i className="bi bi-piggy-bank mr-2"></i>
+											Credit
+										</span>
+									</button>
+								</div>
+							</div>
 
-	render() {
-		const item = this.context.getBuyItem();
-		const { errors, form, success } = this.state;
-		return (
-			<div className="container mt-3 mb-5">
-				<article className="row">
-					{success ? (
-						<div className="text-center col">
-							<i className="fas fa-check-circle fa-5x text-success"></i>
-							<h2 className="text-success">Success</h2>
-							<p>Your order has been successfully placed.</p>
-							<p>We'd get in touched soon!</p>
-							<Link
-								onClick={() => {
-									this.props.history.replace("/");
-								}}>
-								Back to Shop
-							</Link>
-						</div>
-					) : (
-						<>
-							<section className="col-md-6 col order-2 order-md-1">
-								<h3>Checkout</h3>
-								{errors &&
-									errors.map((err, index) => (
-										<strong className="text-danger d-block" key={index}>
-											{err}
-										</strong>
-									))}
+							<hr />
+							<CheckOutForm
+								onCheckout={handleCheckOut}
+								isCash={isCash}
+								busy={busy}
+								onRedeemCode={handleRedeemCode}
+								card={card}
+							/>
+						</section>
+						{item && (
+							<section className="col-md-4 offset-md-1 order-1 order-md-2 mb-5">
+								<h3>Your Order</h3>
 								<hr />
-								<CheckOutForm
-									onCheckout={this.handleCheckOut}
-									onChange={this.handleChange}
-									data={form}
-								/>
+								<BuyCheckOut item={item} busy={busy} card={card} />
 							</section>
-							{item && (
-								<section className="col-md-4 order-1 order-md-2 mb-5">
-									<h3>Order</h3>
-									<hr />
-									<BuyCheckOut item={item} />
-								</section>
-							)}
-						</>
-					)}
-				</article>
-			</div>
-		);
-	}
-}
+						)}
+					</>
+				)}
+			</article>
+		</div>
+	);
+};
 
 export default CheckOut;

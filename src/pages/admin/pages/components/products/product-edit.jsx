@@ -26,6 +26,9 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 		regularPrice: obj.regularPrice,
 		newPrice: obj.newPrice,
 		location: obj.location,
+		productTags: obj.productTags,
+		deliveryCost: obj.deliveryCost,
+		deliveryPeriod: obj.deliveryPeriod,
 	});
 	const [busy, setBusy] = useState(false);
 	const [cats, setCats] = useState([]);
@@ -69,6 +72,7 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 
 	const updateRecord = () => {
 		setBusy(true);
+		// console.log(record);
 		updateData("products", { ...record })
 			.then((res) => {
 				onReload(true);
@@ -217,6 +221,34 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 								/>
 							</div>
 							<div className="col-6 mb-3">
+								<label htmlFor="deliveryCost" className="d-form-label">
+									Delivery Cost
+								</label>
+								<input
+									type="text"
+									id="deliveryCost"
+									name="deliveryCost"
+									className="d-form-control w-100"
+									value={record.deliveryCost}
+									onChange={(e) => handleChange(e)}
+								/>
+							</div>
+						</div>
+						<div className="row">
+							<div className="col-6 mb-3">
+								<label htmlFor="deliveryPeriod" className="d-form-label">
+									Delivery Period
+								</label>
+								<input
+									type="text"
+									id="deliveryPeriod"
+									name="deliveryPeriod"
+									className="d-form-control w-100"
+									value={record.deliveryPeriod}
+									onChange={(e) => handleChange(e)}
+								/>
+							</div>
+							<div className="col-6 mb-3">
 								<label htmlFor="location" className="d-form-label">
 									Location
 								</label>
@@ -243,8 +275,22 @@ const ProductEdit = ({ obj, onReload, onEdit }) => {
 									value={record.description}
 									onChange={(e) => handleChange(e)}></textarea>
 							</div>
+							<div className="col-12">
+								<label htmlFor="tags" className="d-form-label">
+									Tags (separate tags by space)
+								</label>
+								<input
+									type="text"
+									id="tags"
+									placeholder="e.g. foam mattress luxury mattress"
+									value={record.productTags}
+									onChange={(e) => handleChange(e)}
+									name="productTags"
+									className="d-form-control w-100 shadow"
+								/>
+							</div>
 						</div>
-						<div className="row">
+						<div className="row mt-4">
 							<div className="col-6 mb-3">
 								<input
 									type="checkbox"

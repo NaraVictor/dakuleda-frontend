@@ -2,26 +2,21 @@ import PageTitle from "../../../components/page-title";
 import { useState } from "react";
 import {
 	AccountsComponent,
+	CardsComponent,
 	CategoriesComponent,
 	CompanyComponent,
 	ContactUsComponent,
-	CouponsComponent,
 	SlidersComponent,
 } from "./components";
+import { getRole } from "../../../helpers/auth";
 
 const SettingPages = (props) => {
-	const [page, setPage] = useState(0);
+	const [page, setPage] = useState(2);
 	return (
 		<div className="page settings-page">
 			<PageTitle title="Settings" />
 			<h5>Settings</h5>
 			<div className="sub-menu shadow-sm">
-				<a
-					className={`tab ${page === 0 && "active-tab"}`}
-					href="#"
-					onClick={() => setPage(0)}>
-					Accounts
-				</a>
 				<a
 					className={`tab ${page === 2 && "active-tab"}`}
 					href="#"
@@ -45,21 +40,29 @@ const SettingPages = (props) => {
 					className={`tab ${page === 4 && "active-tab"}`}
 					href="#"
 					onClick={() => setPage(4)}>
-					Coupons
+					Cards
 				</a>
-				{/* <a
+				<a
 					className={`tab ${page === 3 && "active-tab"}`}
 					href="#"
 					onClick={() => setPage(3)}>
 					Sliders
-				</a> */}
+				</a>
+				{getRole() === "admin" && (
+					<a
+						className={`tab ${page === 10 && "active-tab"}`}
+						href="#"
+						onClick={() => setPage(10)}>
+						Accounts
+					</a>
+				)}
 			</div>
 
-			{page === 0 && <AccountsComponent />}
+			{page === 10 && <AccountsComponent />}
 			{/* {page === 1 && <CompanyComponent />} */}
 			{page === 2 && <CategoriesComponent />}
-			{/* {page === 3 && <SlidersComponent />} */}
-			{page === 4 && <CouponsComponent />}
+			{page === 3 && <SlidersComponent />}
+			{page === 4 && <CardsComponent />}
 			{/* {page === 5 && <ContactUsComponent />} */}
 		</div>
 	);

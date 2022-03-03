@@ -57,85 +57,90 @@ const SignUpPage = (props) => {
 	return (
 		<div className="auth mt-5">
 			<PageTitle title="Signup" />
-			<div className="outer w-25 shadow p-5 m-auto">
-				{submitted === false ? (
-					<>
-						{error && (
-							<div className="bg-danger p-2 mb-3 text-center text-white">
-								<small>{errMsg}</small>
-							</div>
-						)}
-						<h4 className="text-center">Create User Account</h4>
-						<hr />
+			<div className="row">
+				<div className="mx-auto col-md-3 col-10">
+					<div className="outer shadow p-4 m-auto">
+						{submitted === false ? (
+							<>
+								{error && (
+									<div className="bg-danger p-2 mb-3 text-center text-white">
+										<small>{errMsg}</small>
+									</div>
+								)}
+								<h4 className="text-center">Create User Account</h4>
+								<hr />
 
-						<form onSubmit={handleSubmit(onSubmit)}>
-							<div className="row">
-								<div className="col-12 mb-2">
-									<select
-										id="role"
-										required
-										name="role"
-										{...register("role", { required: true })}
-										className="custom-select form-control">
-										<option defaultValue value="">
-											select role
-										</option>
-										<option value="manager">Manager</option>
-										<option value="staff">Staff</option>
-									</select>
-								</div>
-								<div className="col-12">
-									<input
-										{...register("fullName", { required: true })}
-										type="text"
-										placeholder="full name"
-										className="form-control"
-									/>
-								</div>
-								<div className="col-12 my-2">
-									<input
-										{...register("username", { required: true })}
-										type="text"
-										placeholder="username"
-										className="form-control"
-									/>
-								</div>
-								<div className="col-12 mb-2">
-									<input
-										{...register("email", { required: true })}
-										type="email"
-										placeholder="email"
-										className="form-control"
-									/>
-								</div>
-								<div className="col-12">
-									<input
-										{...register("password", { required: true })}
-										type="password"
-										placeholder="password"
-										className="form-control"
-									/>
-								</div>
-							</div>
+								<form onSubmit={handleSubmit(onSubmit)}>
+									<div className="row">
+										<div className="col-12 mb-2">
+											<select
+												id="role"
+												required
+												name="role"
+												{...register("role", { required: true })}
+												className="custom-select form-control">
+												<option defaultValue value="">
+													select role
+												</option>
+												<option value="manager">Manager</option>
+												<option value="staff">Staff</option>
+												<option value="admin">Admin</option>
+											</select>
+										</div>
+										<div className="col-12">
+											<input
+												{...register("fullName", { required: true })}
+												type="text"
+												placeholder="full name"
+												className="form-control"
+											/>
+										</div>
+										<div className="col-12 my-2">
+											<input
+												{...register("username", { required: true })}
+												type="text"
+												placeholder="username"
+												className="form-control"
+											/>
+										</div>
+										<div className="col-12 mb-2">
+											<input
+												{...register("email", { required: true })}
+												type="email"
+												placeholder="email"
+												className="form-control"
+											/>
+										</div>
+										<div className="col-12">
+											<input
+												{...register("password", { required: true })}
+												type="password"
+												placeholder="password"
+												className="form-control"
+											/>
+										</div>
+									</div>
 
-							{signupBtn}
-						</form>
-						{/* <p>
+									{signupBtn}
+								</form>
+								{/* <p>
 								<Link to="/login">login instead</Link>
 							</p> */}
-					</>
-				) : (
-					<div className="text-center">
-						<h5 className="mt-3 text-success">
-							User Account successfully created
-						</h5>
-						<button
-							className="btn btn-secondary"
-							onClick={() => setSubmission(false)}>
-							Continue
-						</button>
+							</>
+						) : (
+							<div className="text-center">
+								<h5 className="mt-3 text-success">
+									User Account successfully created
+								</h5>
+								<button
+									className="btn btn-secondary"
+									onClick={() => setSubmission(false)}>
+									Continue
+								</button>
+							</div>
+						)}
 					</div>
-				)}
+				</div>
 			</div>
 		</div>
 	);

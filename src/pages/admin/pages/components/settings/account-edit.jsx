@@ -102,6 +102,7 @@ const AccountEdit = ({ user, onReload, onEdit }) => {
 								onChange={(e) => handleChange(e)}>
 								<option value="manager">Manager</option>
 								<option value="staff">Staff</option>
+								<option value="admin">Admin</option>
 							</select>
 						</div>
 					</div>

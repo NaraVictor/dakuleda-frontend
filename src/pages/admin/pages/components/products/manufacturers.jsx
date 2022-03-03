@@ -5,6 +5,7 @@ import { fetchData } from "../../../../../helpers/utilities";
 import { Spinner2 } from "../../../../../components/spinner";
 import { ManufacturerDetail } from "./manufacturer-detail";
 import { ManufacturerEdit } from "./manufacturers-edit";
+import { getRole } from "../../../../../helpers/auth";
 const ManufacturersComponent = (props) => {
 	const [manufacturers, setManufacturers] = useState([]);
 	const [selected, setSelected] = useState({});
@@ -36,14 +37,16 @@ const ManufacturersComponent = (props) => {
 	}, []);
 	return (
 		<div className="components">
-			<div className="buttons my-4">
-				<Link
-					className="btn-dc-white p-2"
-					to="/admin/products/new-manufacturer">
-					<i className="bi bi-plus"></i>
-					add manufacturer
-				</Link>
-			</div>
+			{getRole() !== "staff" && (
+				<div className="buttons my-4">
+					<Link
+						className="btn-dc-white p-2"
+						to="/admin/products/new-manufacturer">
+						<i className="bi bi-plus"></i>
+						add manufacturer
+					</Link>
+				</div>
+			)}
 			<div className="row">
 				<div className="col-5">
 					{manufacturers.length === 0 ? (

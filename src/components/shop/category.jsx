@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { generateFileUrl } from "./../../helpers/utilities";
+import { generateFileUrl, toTitleCase } from "./../../helpers/utilities";
 
 const Category = (props) => {
 	const { imageFileName, name, slug } = props.category;
@@ -9,7 +9,7 @@ const Category = (props) => {
 			<div className="category text-center">
 				<img src={generateFileUrl(imageFileName)} alt="category" />
 			</div>
-			<div className="category-title text-center">{name}</div>
+			<div className="category-title text-center">{toTitleCase(name)}</div>
 		</Link>
 	);
 };

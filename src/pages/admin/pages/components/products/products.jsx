@@ -4,6 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import { fetchData, cedisLocale } from "../../../../../helpers/utilities";
 import { ProductDetail } from "./product-detail";
 import { ProductEdit } from "./product-edit";
+import { getRole } from "../../../../../helpers/auth";
 
 const ProductsComponent = (props) => {
 	const [products, setProduct] = useState([]);
@@ -40,12 +41,14 @@ const ProductsComponent = (props) => {
 	}, []);
 	return (
 		<div className="components">
-			<div className="buttons my-4">
-				<Link className="btn-dc-white p-2" to="/admin/products/new">
-					<i className="bi bi-plus"></i>
-					add product
-				</Link>
-			</div>
+			{getRole() !== "staff" && (
+				<div className="buttons my-4">
+					<Link className="btn-dc-white p-2" to="/admin/products/new">
+						<i className="bi bi-plus"></i>
+						add product
+					</Link>
+				</div>
+			)}
 			<div>
 				{/* {products.length === 0 ? (
 					<>

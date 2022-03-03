@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import cartIcon from "../../static/svg/cart.svg";
+// import cartIcon from "../../static/svg/cart.svg";
 import { cartContext } from "./../../context/cartContext";
 
 const CartIcon = () => {
@@ -7,7 +7,7 @@ const CartIcon = () => {
 
 	return (
 		<span>
-			<img src={cartIcon} height="30" alt="cart icon" />
+			{/* <img src={cartIcon} height="30" alt="cart icon" /> */}
 
 			{cart.length ? (
 				<span>

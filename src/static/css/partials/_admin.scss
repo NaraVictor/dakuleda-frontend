@@ -3,6 +3,12 @@
 .admin-template {
 	height: 100vh;
 	overflow-x: hidden;
+	position: relative;
+
+	.content {
+		background-color: #dde;
+		min-height: 100vh;
+	}
 
 	.nav {
 		width: 100vw;
@@ -18,11 +24,6 @@
 
 	.lower-nav {
 		border-top: 1px solid #ddd;
-	}
-
-	.content {
-		background-color: #dde;
-		height: 100vh;
 	}
 
 	.nav-link {

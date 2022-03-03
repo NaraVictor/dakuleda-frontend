@@ -3,14 +3,15 @@ import { Link } from "react-router-dom";
 import AddToCartButton from "./addToCartButton";
 import BuyItemButton from "./buyItemButton";
 import { shopContext } from "./../../context/shopContext";
+import { generateFileUrl } from "./../../helpers/utilities";
 
 const ProductListView = (props) => {
 	const {
 		name,
-		product_image,
-		regular_price,
-		new_price,
-		manufacturer_name,
+		imageFileName,
+		regularPrice,
+		newPrice,
+		manufacturer,
 		description,
 		slug,
 	} = props.prod;
@@ -27,7 +28,7 @@ const ProductListView = (props) => {
 						className="col"
 						onClick={() => shop.selectItem(props.prod)}>
 						<img
-							src={product_image}
+							src={generateFileUrl(imageFileName)}
 							alt="product"
 							className="mr-3 product-list-image"
 						/>
@@ -41,15 +42,15 @@ const ProductListView = (props) => {
 						onClick={() => shop.selectItem(props.prod)}>
 						<h4>{name}</h4>
 						<p className="product-list-manufacturer text-success">
-							<strong>{manufacturer_name}</strong>
+							<strong>{manufacturer}</strong>
 						</p>
 						<small id="product-list-description">{description}</small>
 
 						{/* for small screen only */}
 						<div className="product-list-sm-details">
-							<h4>GHS {new_price}</h4>
+							<h4>GHS {newPrice}</h4>
 							<p>
-								<strike>GHS {regular_price}</strike>
+								<strike>GHS {regularPrice}</strike>
 							</p>
 						</div>
 					</Link>
@@ -57,12 +58,12 @@ const ProductListView = (props) => {
 
 				<div className="col-md-4 product-list-footer pl-5 ml-5 ml-md-0">
 					<div className="product-list-prices">
-						<h4>GHS {new_price}</h4>
+						<h4>GHS {newPrice}</h4>
 						<p>
-							<strike>GHS {regular_price}</strike>
+							<strike>GHS {regularPrice}</strike>
 						</p>
 					</div>
-					<AddToCartButton prod={props.prod} classes="d-md-block my-md-3" />
+					{/* <AddToCartButton prod={props.prod} classes="d-md-block my-md-3" /> */}
 					<BuyItemButton prod={props.prod} classes="d-md-block" />
 				</div>
 			</div>

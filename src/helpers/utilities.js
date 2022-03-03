@@ -2,11 +2,10 @@ import * as yup from "yup";
 import axios from "axios";
 import { urls } from "./config";
 import { getToken } from "./auth";
-import { getYear } from "date-fns";
 import XLSX from "xlsx";
 
 // default url
-export const appUrl = urls.devApi;
+export const appUrl = urls.prodApi;
 
 export const validateSignUp = (data) => {
 	const schema = yup.object().shape({
@@ -102,7 +101,7 @@ export const exportToExcel = (
 		return XLSX.writeFile(wb, `${fileName}.xlsx`);
 	} catch (ex) {
 		alert("there was an error");
-		console.log(ex);
+		// console.log(ex);
 	}
 };
 
@@ -125,9 +124,9 @@ export const generateFileUrl = (fileName, isImage = true) => {
 
 	let url = "";
 	if (isImage) {
-		url = appUrl.replace("/api", "") + "/uploads/images";
+		url = appUrl.slice(0, -3) + "/uploads/images";
 	} else {
-		url = appUrl.replace("/api", "") + "/uploads/videos";
+		url = appUrl.slice(0, -3) + "/uploads/videos";
 	}
 	return `${url}/${fileName}`;
 };
@@ -135,8 +134,6 @@ export const generateFileUrl = (fileName, isImage = true) => {
 export const uploadFile = async (url, file, fileName) => {
 	const formData = new FormData();
 	formData.append(fileName, file);
-	// const imagefile = document.getElementById("productImage");
-	// formData.append("image", imagefile.files[0]);
 
 	try {
 		const res = await postData(url, formData);
@@ -145,4 +142,18 @@ export const uploadFile = async (url, file, fileName) => {
 	} catch (ex) {
 		console.log("error ");
 	}
+};
+
+export const priceChangePercentage = (oldPrice, newPrice) => {
+	// new price - old price
+	// divide answer by old price
+	// multiply answer by 100
+	if (oldPrice === null || undefined) return;
+	if (newPrice === null || undefined) return;
+
+	const change = oldPrice - newPrice;
+	if (change <= 0) return 0;
+
+	const percentage = change / oldPrice;
+	return (percentage * 100).toFixed(0);
 };

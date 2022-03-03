@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { authenticate, setRole } from "../../../helpers/auth";
-import logo from "../../../static/img/logo/logo.png";
+import logo from "../../../static/img/logo/logo-new.png";
 import PageTitle from "./../../../components/page-title";
 import { postData } from "./../../../helpers/utilities";
 
@@ -28,6 +28,8 @@ const LoginPage = (props) => {
 					setRole(res.data.data.role);
 					return history.replace(route?.from?.pathname || "/admin");
 				}
+
+				throw new Error("error logging in");
 			})
 			.catch((err) => {
 				setError(true);
@@ -47,67 +49,69 @@ const LoginPage = (props) => {
 	};
 
 	return (
-		<div className="auth w-25 mx-auto mt-5">
+		<div className="auth mx-auto mt-5 row">
 			<PageTitle title="Login" />
-			<div className="bg-white rounded shadow p-4">
-				<div className="inner admin-login">
-					<form onSubmit={handleSubmit(onSubmit)}>
-						<div className="text-center">
-							<img
-								src={logo}
-								height="80"
-								alt="dakuleda company logo"
-								className="my-4"
-							/>
-							<h6 className="mt-3">
-								<strong>Login</strong>
-							</h6>
-						</div>
-						{loginError && (
-							<div className="bg-danger p-1 mb-3 text-center text-light rounded">
-								<small>{errMsg}</small>
-							</div>
-						)}
-						<div className="row">
-							<div className="col-12 mb-3">
-								<input
-									autoFocus
-									type="email"
-									label="Email"
-									placeholder="email address"
-									required
-									className="w-100 form-control"
-									{...register("email", { required: true })}
+			<div className="col-md-3 col-10 mx-auto">
+				<div className="bg-white rounded shadow p-4">
+					<div className="inner admin-login">
+						<form onSubmit={handleSubmit(onSubmit)}>
+							<div className="text-center">
+								<img
+									src={logo}
+									height="80"
+									alt="dakuleda company logo"
+									className="my-4"
 								/>
+								<h6 className="mt-3">
+									<strong>Login</strong>
+								</h6>
 							</div>
-							<div className="col-12">
-								<input
-									required
-									type="password"
-									label="Password"
-									placeholder="password"
-									className="w-100 form-control"
-									{...register("password", { required: true })}
-								/>
+							{loginError && (
+								<div className="bg-danger p-1 mb-3 text-center text-light rounded">
+									<small>{errMsg}</small>
+								</div>
+							)}
+							<div className="row">
+								<div className="col-12 mb-3">
+									<input
+										autoFocus
+										type="email"
+										label="Email"
+										placeholder="email address"
+										required
+										className="w-100 form-control"
+										{...register("email", { required: true })}
+									/>
+								</div>
+								<div className="col-12">
+									<input
+										required
+										type="password"
+										label="Password"
+										placeholder="password"
+										className="w-100 form-control"
+										{...register("password", { required: true })}
+									/>
+								</div>
 							</div>
-						</div>
 
-						<button
-							type="submit"
-							disabled={busy}
-							className="btn btn-primary w-100 my-4">
-							{btnLabel}
-						</button>
+							<button
+								type="submit"
+								disabled={busy}
+								className="btn btn-primary w-100 my-4">
+								{btnLabel}
+							</button>
 
-						<div className="d-flex justify-content-between">
-							<small className="forgot-password">
-								Forgot <Link to="/forgot-password">password?</Link>
-							</small>
-							<small className="forgot-password">
-								<Link to="/change-password">Change password</Link>
-							</small>
-						</div>
-					</form>
+							<div className="d-flex justify-content-between">
+								<small className="forgot-password">
+									Forgot <Link to="/forgot-password">password?</Link>
+								</small>
+								<small className="forgot-password">
+									<Link to="/change-password">Change password</Link>
+								</small>
+							</div>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>

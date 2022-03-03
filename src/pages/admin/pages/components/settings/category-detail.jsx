@@ -1,3 +1,4 @@
+import { getRole } from "../../../../../helpers/auth";
 import { deleteData } from "../../../../../helpers/utilities";
 import placeholder from "../../../../../static/img/placeholder-image.png";
 import { generateFileUrl } from "./../../../../../helpers/utilities";
@@ -42,19 +43,23 @@ const CategoryDetail = ({ category, onReload, onEdit }) => {
 					</div>
 					<hr />
 					<div className="row">
-						<div className="col-12">
-							<button
-								className="btn-dc-white"
-								onClick={() => onEdit(category, true)}>
-								<i className="bi bi-pencil"></i>
-								edit
-							</button>
+						{getRole() === "admin" && (
+							<div className="col-12">
+								<button
+									className="btn-dc-white"
+									onClick={() => onEdit(category, true)}>
+									<i className="bi bi-pencil"></i>
+									edit
+								</button>
 
-							<button className="btn-dc-white" onClick={() => deleteCategory()}>
-								<i className="bi bi-trash"></i>
-								delete
-							</button>
-						</div>
+								<button
+									className="btn-dc-white"
+									onClick={() => deleteCategory()}>
+									<i className="bi bi-trash"></i>
+									delete
+								</button>
+							</div>
+						)}
 					</div>
 				</div>
 			)}

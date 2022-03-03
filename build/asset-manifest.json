@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a7819f39.chunk.css",
+    "main.js": "/static/js/main.306e9cb9.chunk.js",
+    "main.js.map": "/static/js/main.306e9cb9.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.6290e5e0.js",
+    "runtime-main.js.map": "/static/js/runtime-main.6290e5e0.js.map",
+    "static/css/2.a460dcc0.chunk.css": "/static/css/2.a460dcc0.chunk.css",
+    "static/js/2.cbb43783.chunk.js": "/static/js/2.cbb43783.chunk.js",
+    "static/js/2.cbb43783.chunk.js.map": "/static/js/2.cbb43783.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.a460dcc0.chunk.css.map": "/static/css/2.a460dcc0.chunk.css.map",
+    "static/css/main.a7819f39.chunk.css.map": "/static/css/main.a7819f39.chunk.css.map",
+    "static/js/2.cbb43783.chunk.js.LICENSE.txt": "/static/js/2.cbb43783.chunk.js.LICENSE.txt",
+    "static/media/cart.637894a0.svg": "/static/media/cart.637894a0.svg",
+    "static/media/charity-2.efee5cf5.png": "/static/media/charity-2.efee5cf5.png",
+    "static/media/check.2b1900ca.png": "/static/media/check.2b1900ca.png",
+    "static/media/close.2fce6214.png": "/static/media/close.2fce6214.png",
+    "static/media/emptyCart.c8301e2a.svg": "/static/media/emptyCart.c8301e2a.svg",
+    "static/media/logo-new.1324e791.jpg": "/static/media/logo-new.1324e791.jpg",
+    "static/media/logo-new.63d85b65.png": "/static/media/logo-new.63d85b65.png",
+    "static/media/logo-white.380b5a86.png": "/static/media/logo-white.380b5a86.png",
+    "static/media/placeholder-image.405fb57d.png": "/static/media/placeholder-image.405fb57d.png",
+    "static/media/s1.f7243980.png": "/static/media/s1.f7243980.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6290e5e0.js",
+    "static/css/2.a460dcc0.chunk.css",
+    "static/js/2.cbb43783.chunk.js",
+    "static/css/main.a7819f39.chunk.css",
+    "static/js/main.306e9cb9.chunk.js"
+  ]
+}

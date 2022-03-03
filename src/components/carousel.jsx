@@ -10,6 +10,7 @@ export default class DefaultSlider extends Component {
 
 		return (
 			<Splide
+				className="w-100"
 				options={{
 					type: "loop",
 					gap: "1rem",
@@ -19,7 +20,7 @@ export default class DefaultSlider extends Component {
 					arrows: "slider",
 					drag: true,
 					keyboard: true,
-					// lazyload: true,
+					lazyload: true,
 					autoheight: true,
 					speed: slideSpeed ?? 400,
 					perPage: slideNo ?? 1,
@@ -51,6 +52,7 @@ export class SlimSlider extends Component {
 					interval: duration ?? 5000,
 					autoheight: true,
 					perPage: slideNo ?? 1,
+					pagination: false,
 				}}
 				hasSliderWrapper>
 				{this.props.children}

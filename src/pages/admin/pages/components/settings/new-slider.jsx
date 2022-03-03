@@ -1,18 +1,49 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { postData } from "./../../../../../helpers/utilities";
+import { postData, uploadFile } from "./../../../../../helpers/utilities";
 const NewSlider = (props) => {
-	const [hasButton, setHasButton] = useState(false);
+	// const [hasButton, setHasButton] = useState(false);
 	const { register, handleSubmit, reset } = useForm();
 	const [busy, setBusy] = useState(false);
 
+	const [image, setImage] = useState({
+		file: {},
+		url: "",
+	});
+
+	const imageUpload = (e) => {
+		if (e.target.value) {
+			setImage({
+				file: e.target.files,
+				url: URL.createObjectURL(e.target.files[0]),
+			});
+		}
+	};
+
 	const submitData = (data) => {
 		setBusy(true);
+
+		// ensure user has uploaded a slider image
+		if (image.url === "") {
+			alert("please upload a category picture");
+			return;
+		}
+
 		postData("sliders", { ...data })
 			.then((res) => {
 				if (res.status === 200) {
-					reset();
-					alert("slider created successfully");
+					uploadFile(
+						`sliders/${res.data.data.id}/upload-picture`,
+						image.file[0],
+						"sliderImage"
+					).then((res) => {
+						reset();
+						setImage({
+							file: {},
+							url: "",
+						});
+						alert("slider created successfully");
+					});
 				}
 			})
 			.catch((ex) => alert("an error occurred"))
@@ -44,7 +75,7 @@ const NewSlider = (props) => {
 				<div className="col-2">
 					<button
 						className="btn-dc-white"
-						onClick={() => document.getElementById("sliderImage").click()}>
+						onClick={() => document.getElementById("sliderUploader").click()}>
 						<i className="bi bi-image mr-1"></i>
 						upload image
 					</button>
@@ -79,7 +110,7 @@ const NewSlider = (props) => {
 								{...register("url")}
 							/>
 						</div>
-						<div className="col-9 my-3">
+						{/* <div className="col-9 my-3">
 							<label htmlFor="descripton" className="d-form-label">
 								Description
 							</label>
@@ -90,8 +121,8 @@ const NewSlider = (props) => {
 								className="d-form-control w-100 shadow"
 								{...register("description")}
 							/>
-						</div>
-						<div className="col-9 mt-5">
+						</div> */}
+						{/* <div className="col-9 mt-5">
 							<input
 								type="checkbox"
 								id="hasButton"
@@ -115,13 +146,25 @@ const NewSlider = (props) => {
 									className="d-form-control w-100 shadow"
 								/>
 							</div>
-						)}
+						)} */}
+						<div className="col-12 mt-3">
+							{image.url && (
+								<img
+									src={image.url}
+									alt="slider img"
+									style={{
+										maxHeight: "250px",
+									}}
+								/>
+							)}
+						</div>
 					</div>
 				</div>
 				<input
 					type="file"
 					name="sliderImage"
-					id="sliderImage"
+					id="sliderUploader"
+					onChange={(e) => imageUpload(e)}
 					hidden
 					accept=".jpg, .png, .gif, .jpeg"
 				/>

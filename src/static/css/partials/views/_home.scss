@@ -4,5 +4,12 @@
 	color: $dakuleda-black;
 }
 
+.slider-image {
+	max-height: 55vh;
+}
+
 @media screen and (max-width: 769px) {
+	.slider-image {
+		width: 100vw;
+	}
 }

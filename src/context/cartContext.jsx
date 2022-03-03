@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 
 export const cartContext = createContext();
+cartContext.displayName = "cart context";
 
 class CartContext extends React.Component {
 	constructor(props) {

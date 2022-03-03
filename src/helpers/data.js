@@ -3,25 +3,25 @@ import arraySort from "array-sort";
 
 export const Products = [];
 
-export const salesChartData = (sales) => {
-	sales = arraySort(sales, "saleDate");
-	if (sales.length > 5) {
+export const orderChartData = (orders) => {
+	orders = arraySort(orders, "orderDate");
+	if (orders.length > 5) {
 		let counter = 0;
-		while (sales.length < 5) {
-			sales.push(sales[counter]);
+		while (orders.length < 5) {
+			orders.push(orders[counter]);
 			++counter;
 		}
 	}
 
-	const chartLabels = sales.map((s) =>
-		format(new Date(s.saleDate), "EEE, MMM d")
+	const chartLabels = orders.map((o) =>
+		format(new Date(o.orderDate), "EEE, MMM d")
 	);
-	const values = sales.map((s) => s.total_amount);
+	const values = orders.map((o) => o.orderTotal);
 	return {
 		labels: chartLabels,
 		datasets: [
 			{
-				label: "Sales",
+				label: "Orders",
 				data: values,
 				backgroundColor: [
 					"rgba(255, 99, 132, 0.2)",

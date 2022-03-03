@@ -11,7 +11,7 @@ const Shop = (props) => {
 			<hr />
 			<div className="row">
 				{ctx.fetchProducts()?.map((product) => (
-					<article className="col-md-3 col-sm-6 my-3" key={product.id}>
+					<article className="col-md-3 col-6 my-1" key={product.id}>
 						<Product prod={product} />
 					</article>
 				))}

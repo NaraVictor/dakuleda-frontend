@@ -1,22 +1,22 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { cartContext } from "./../../../context/cartContext";
+import { generateFileUrl } from "./../../../helpers/utilities";
 
 const CartItem = (props) => {
 	const cart = useContext(cartContext);
-
 	const {
 		name,
 		category,
-		new_price,
-		regular_price,
-		product_image,
-		number_in_stock,
+		manufacturer,
+		newPrice,
+		regularPrice,
+		imageFileName,
 		quantity,
 	} = props.item;
 
 	let options = [];
 
-	for (let i = 1; i <= number_in_stock; i++) {
+	for (let i = 1; i <= 20; i++) {
 		options.push(i);
 	}
 
@@ -35,9 +35,9 @@ const CartItem = (props) => {
 
 	const prices = (
 		<span className="cart-prices">
-			<h4>GHS {new_price}</h4>
+			<h4>GHS {newPrice}</h4>
 			<p>
-				<strike>GHS {regular_price}</strike>
+				<strike>GHS {regularPrice}</strike>
 			</p>
 		</span>
 	);
@@ -58,11 +58,15 @@ const CartItem = (props) => {
 	return (
 		<div className="row">
 			<div className="col-2">
-				<img src={product_image} alt="cart product" className="cart-image" />
+				<img
+					src={generateFileUrl(imageFileName)}
+					alt="cart product"
+					className="cart-image"
+				/>
 			</div>
 			<div className="col-md-5 col ml-3 ml-md-0 cart-detail">
 				<h4>{name}</h4>
-				<p>{category}</p>
+				<p className="text-success">{/* <strong>{category.name}</strong> */}</p>
 
 				<div className="cart-detail-sm">
 					{isMobile ? (

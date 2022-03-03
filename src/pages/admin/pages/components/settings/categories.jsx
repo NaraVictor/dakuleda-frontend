@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchData } from "../../../../../helpers/utilities";
 import { CategoryDetail } from "./category-detail";
 import { CategoryEdit } from "./category-edit";
+import { getRole } from "../../../../../helpers/auth";
 
 const CategoriesComponent = (props) => {
 	const [categories, setCategories] = useState([]);
@@ -37,12 +38,14 @@ const CategoriesComponent = (props) => {
 
 	return (
 		<div className="components">
-			<div className="buttons my-4">
-				<Link className="btn-dc-white p-2" to="/admin/settings/new-category">
-					<i className="bi bi-plus"></i>
-					add category
-				</Link>
-			</div>
+			{getRole() === "admin" && (
+				<div className="buttons my-4">
+					<Link className="btn-dc-white p-2" to="/admin/settings/new-category">
+						<i className="bi bi-plus"></i>
+						add category
+					</Link>
+				</div>
+			)}
 			<div className="row">
 				<div className="col-5">
 					<table className="table table-striped table-hover">

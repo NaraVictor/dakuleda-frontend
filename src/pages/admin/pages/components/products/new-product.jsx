@@ -3,14 +3,18 @@
 import { useForm } from "react-hook-form";
 import {
 	postData,
-	generateSlug,
 	fetchData,
 	uploadFile,
 } from "./../../../../../helpers/utilities";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import AppModal from "./../../../../../components/modal";
+import { NewProductFeatures } from "./new-features";
+import { NewProductGallery } from "./new-gallery";
+import { newProductContext } from "./../../../../../context/newProductContext";
 
 const NewProduct = (props) => {
+	const ctx = useContext(newProductContext);
+
 	const { handleSubmit, reset, register } = useForm();
 	const [busy, setBusy] = useState(false);
 	const [categories, setCategories] = useState([]);
@@ -19,6 +23,22 @@ const NewProduct = (props) => {
 		file: {},
 		url: "",
 	});
+	const [modal, setModal] = useState({
+		open: false,
+		content: "",
+		title: "",
+		size: "",
+	});
+
+	const toggleModal = (content, title, size = "md-modal") => {
+		setModal({
+			open: !modal.open,
+			content,
+			title,
+			size,
+		});
+	};
+
 	const imageUpload = (e) => {
 		if (e.target.value) {
 			setImage({
@@ -36,17 +56,11 @@ const NewProduct = (props) => {
 		fetchData("manufacturers").then((res) => setManufacturers(res.data.data));
 	};
 
-	useEffect(() => {
-		fetchCategories();
-		fetchManufacturers();
-	}, []);
-
 	const submitData = (data) => {
 		if (image.url === "") {
 			alert("please upload a product image");
 			return;
 		}
-
 		setBusy(true);
 
 		postData("products", { ...data })
@@ -57,25 +71,54 @@ const NewProduct = (props) => {
 						image.file[0],
 						"productImage"
 					).then((res) => {
-						alert("product added successfully");
-						reset();
-						setImage({
-							file: {},
-							url: "",
-						});
-						return;
+						if (ctx.submitData(res.data.data.id)) {
+							alert("product added successfully");
+							reset();
+							setImage({
+								file: {},
+								url: "",
+							});
+							return;
+						} else {
+							alert("something went wrong");
+						}
 					});
+				} else {
+					throw Error(res);
 				}
-				alert("something went wrong");
 			})
-			.catch((ex) => alert("an error occurred"))
+			.catch((ex) => {
+				if (ex.toString().includes("409")) {
+					alert("a product with similar name already exists");
+					return;
+				}
+			})
 			.finally(() => setBusy(false));
 	};
 
+	useEffect(() => {
+		fetchCategories();
+		fetchManufacturers();
+	}, []);
+
 	return (
 		<div>
+			<AppModal
+				title={modal.title}
+				onClose={toggleModal}
+				open={modal.open}
+				containerClass={modal.size}>
+				{modal.content}
+			</AppModal>
 			<div className="d-flex justify-content-between align-items-center">
-				<h5>New Product</h5>
+				<div>
+					<h5>New Product</h5>
+					<div>
+						<strong>{ctx.getFeatures().length} </strong> feature(s) added
+						<strong className="ml-3">{ctx.getGallery().values.length} </strong>
+						image(s) in gallery
+					</div>
+				</div>
 				<button className="btn" onClick={() => props.history.go(-1)}>
 					<span className="h5">
 						<i className="bi bi-arrow-left-circle"></i> back
@@ -84,7 +127,7 @@ const NewProduct = (props) => {
 			</div>
 			<hr />
 			<div className="row">
-				<div className="col-9">
+				<div className="col-8">
 					<button
 						className={`${
 							busy ? "btn-dc-white" : "btn-primary-filled"
@@ -95,20 +138,36 @@ const NewProduct = (props) => {
 						{busy ? "processing..." : "Submit"}
 					</button>
 				</div>
-				<div className="col-3">
-					<span className="mr-2">upload:</span>
+				<div className="col-4">
+					<button
+						className="btn-dc-white"
+						onClick={() =>
+							toggleModal(<NewProductFeatures />, "Add Product Features")
+						}>
+						<i className="bi bi-card-checklist mr-1"></i>
+						Add Features
+					</button>
+					{/* <button
+						className="btn-dc-white"
+						onClick={() =>
+							toggleModal(<NewProductGallery />, "Add Product Gallery")
+						}>
+						<i className="bi bi-images mr-1"></i>
+						Add Gallery
+					</button> */}
+					{/* <span className="mr-2">upload:</span> */}
 					<button
 						className="btn-dc-white"
 						onClick={() => document.getElementById("productImage").click()}>
 						<i className="bi bi-image mr-1"></i>
-						image
+						Add Image
 					</button>
-					<button
+					{/* <button
 						className="btn-dc-white"
 						onClick={() => document.getElementById("productVideo").click()}>
 						<i className="bi bi-camera-video mr-1"></i>
 						video
-					</button>
+					</button> */}
 				</div>
 			</div>
 			<hr />
@@ -134,7 +193,8 @@ const NewProduct = (props) => {
 									Purchase Price *
 								</label>
 								<input
-									type="text"
+									type="number"
+									step="0.1"
 									id="purchasePrice"
 									className="d-form-control w-100 shadow"
 									required
@@ -148,7 +208,8 @@ const NewProduct = (props) => {
 									Regular Price *
 								</label>
 								<input
-									type="text"
+									type="number"
+									step="0.1"
 									id="regularPrice"
 									required
 									className="d-form-control w-100 shadow"
@@ -161,11 +222,48 @@ const NewProduct = (props) => {
 									New Price *
 								</label>
 								<input
-									type="text"
+									type="number"
+									step="0.1"
 									id="newPrice"
 									required
 									className="d-form-control w-100 shadow"
 									{...register("newPrice", { required: true })}
+								/>
+							</div>
+							<div className="col-md-4 col-12">
+								<label htmlFor="deliveryCost" className="d-form-label">
+									Delivery Cost
+								</label>
+								<input
+									type="number"
+									step="0.1"
+									id="deliveryCost"
+									className="d-form-control w-100 shadow"
+									{...register("deliveryCost")}
+								/>
+							</div>
+						</div>
+						<div className="row">
+							<div className="col-md-4 col-12">
+								<label htmlFor="deliveryPeriod" className="d-form-label">
+									Delivery Period
+								</label>
+								<input
+									type="text"
+									id="deliveryPeriod"
+									className="d-form-control w-100 shadow"
+									{...register("deliveryPeriod")}
+								/>
+							</div>
+							<div className="col-md-4 col-12">
+								<label htmlFor="SKU" className="d-form-label">
+									SKU
+								</label>
+								<input
+									type="text"
+									id="SKU"
+									className="d-form-control w-100 shadow"
+									{...register("SKU")}
 								/>
 							</div>
 							<div className="col-md-4 col-12">
@@ -180,20 +278,8 @@ const NewProduct = (props) => {
 								/>
 							</div>
 						</div>
-						<div className="row">
-							<div className="col-md-4 col-12">
-								<label htmlFor="SKU" className="d-form-label">
-									SKU
-								</label>
-								<input
-									type="text"
-									id="SKU"
-									className="d-form-control w-100 shadow"
-									{...register("SKU")}
-								/>
-							</div>
-
-							<div className="col-md-4 col-12">
+						<div className="row my-2">
+							<div className="col-md-6 col-12">
 								<label htmlFor="category" className="d-form-label">
 									Category *
 								</label>
@@ -211,7 +297,7 @@ const NewProduct = (props) => {
 									))}
 								</select>
 							</div>
-							<div className="col-md-4 col-12">
+							<div className="col-md-6 col-12">
 								<label htmlFor="manufacturer" className="d-form-label">
 									Manufacturer *
 								</label>
@@ -240,6 +326,20 @@ const NewProduct = (props) => {
 									id="description"
 									{...register("description")}
 									className="d-form-control w-100 shadow"></textarea>
+							</div>
+						</div>
+						<div className="row my-2">
+							<div className="col-12">
+								<label htmlFor="tags" className="d-form-label">
+									Tags (separate tags by space)
+								</label>
+								<input
+									type="text"
+									id="tags"
+									placeholder="e.g. foam mattress luxury mattress"
+									{...register("productTags")}
+									className="d-form-control w-100 shadow"
+								/>
 							</div>
 						</div>
 						<hr />

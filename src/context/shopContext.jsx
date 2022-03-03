@@ -1,19 +1,48 @@
 import React, { createContext, useState, useEffect } from "react";
 import { fetchData } from "../helpers/utilities";
+import UAParser from "ua-parser-js";
+import { postData } from "./../helpers/utilities";
+import axios from "axios";
 
 export const shopContext = createContext();
+shopContext.displayName = "shop context";
 
 const ShopContext = (props) => {
 	const [state, setState] = useState({
 		products: [],
 		selectedItem: {},
 		buy: false,
+		cardCodes: [],
 	});
 
-	useEffect(() => {
-		fetchProducts().then((res) => {
-			setState({ ...state, products: res.data?.data });
+	// record site visitor details
+	const recordVisitor = () => {
+		// const rs = await axios.get( "https://ipapi.co/json/" );
+		// const rs = await axios.get("http://ip-api.com/json/"); //free version limited to 45 requests per minute
+		axios.get("https://ipapi.co/json/").then((res) => {
+			if (res.status === 200) {
+				let ua = new UAParser();
+				ua &&
+					postData("analytics", {
+						country: res.data.country_name,
+						ipAddress: res.data.ip,
+						city: res.data.city,
+						url: window.location.href,
+						// device
+						deviceType: ua.getResult().device.type,
+						deviceVendor: ua.getResult().device.vendor,
+						os: ua.getResult().os.name,
+						browser: ua.getResult().browser.name,
+					});
+			}
 		});
+	};
+
+	useEffect(() => {
+		recordVisitor();
+		// fetchProducts().then((res) => {
+		// 	setState({ ...state, products: res.data?.data });
+		// });
 	}, []);
 
 	const findProduct = (slug) => {
@@ -38,7 +67,7 @@ const ShopContext = (props) => {
 		// types are cart, buy
 
 		//
-		if (type === "buy") {
+		if (type.toLowerCase() === "buy") {
 			setState({ buy: false });
 			localStorage.removeItem("buy");
 			return;
@@ -88,6 +117,38 @@ const ShopContext = (props) => {
 		return sp;
 	};
 
+	const handleAddCode = (code) => {
+		if (state.cardCodes.filter((c) => c.code === code.code).length > 0) {
+			alert("this code is already added");
+			return false;
+		}
+
+		setState({
+			...state,
+			cardCodes: [...state.cardCodes, code],
+		});
+		return true;
+	};
+	const handleGetCodes = () => {
+		return state.cardCodes;
+	};
+
+	const handleDeleteCode = (code) => {
+		// go ahead to delete one
+		const newCodes = state.cardCodes.filter((c) => c.code !== code);
+		setState({
+			...state,
+			cardCodes: newCodes,
+		});
+	};
+
+	const handleResetCodes = () => {
+		setState({
+			...state,
+			cardCodes: [],
+		});
+	};
+
 	return (
 		<shopContext.Provider
 			value={{
@@ -97,6 +158,12 @@ const ShopContext = (props) => {
 				buyItem: handleBuyItem,
 				getBuyItem: handleGetBuyItem,
 				checkOut: handleCheckout,
+
+				// cardcodes
+				addCode: handleAddCode,
+				getCodes: handleGetCodes,
+				deleteCode: handleDeleteCode,
+				resetCodes: handleResetCodes,
 			}}>
 			{props.children}
 		</shopContext.Provider>

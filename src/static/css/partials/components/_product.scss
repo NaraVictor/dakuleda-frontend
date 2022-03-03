@@ -2,7 +2,7 @@
 
 .product {
 	position: relative;
-	height: 20rem;
+	height: 16rem;
 
 	& .product-image img {
 		max-width: 200px;
@@ -16,6 +16,24 @@
 		&:hover {
 			text-decoration: none;
 		}
+	}
+
+	.add-ons {
+		position: absolute;
+		top: 0;
+		text-align: left;
+	}
+
+	.change-percent {
+		position: absolute;
+		top: 0;
+		right: 0;
+		background-color: #262625bf;
+		color: whitesmoke;
+		border-radius: 5px;
+		padding: 3px;
+		font-size: 0.8rem;
+		margin-right: 7px;
 	}
 }
 
@@ -31,18 +49,28 @@
 
 .product-detail {
 	@include absolutePosition();
-	bottom: 10%;
+	bottom: 16%;
 }
 
-@media screen and (min-width: 400px) {
-	.product-title {
-		overflow: hidden;
-		text-overflow: ellipsis;
-		display: -webkit-box;
-		-webkit-line-clamp: 2; /* number of lines to show */
-		-webkit-box-orient: vertical;
-	}
+.product-title {
+	font-size: 1rem;
+	// font-weight: 700;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 1; /* number of lines to show */
+	-webkit-box-orient: vertical;
 }
+
+// @media screen and (min-width: 400px) {
+// 	.product-title {
+// 		overflow: hidden;
+// 		text-overflow: ellipsis;
+// 		display: -webkit-box;
+// 		-webkit-line-clamp: 2; /* number of lines to show */
+// 		-webkit-box-orient: vertical;
+// 	}
+// }
 
 // PRODUCT LIST
 
@@ -71,7 +99,7 @@
 	}
 
 	.product {
-		height: 16rem;
+		height: 14rem;
 		margin: 1rem 0;
 
 		& .product-image img {
@@ -86,12 +114,8 @@
 		margin-left: 5px;
 	}
 
-	.product-title-details {
-		& h4 {
-			font-size: 1rem;
-			font-weight: 100;
-		}
-
+	.product-title-details,
+	.product-detail {
 		& .product-list-manufacturer {
 			font-size: 0.9rem;
 			margin-bottom: 3px;
